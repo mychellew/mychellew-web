@@ -1,0 +1,37 @@
+GEOB 472: Lab 1 – Textile Waste Recycling Depots
+
+Here is a screenshot of what my map is mean to do. I thought that this part of my map was the most 
+interesting because it is a snapshot of what I intended this map to be. A simple, user-friendly way to 
+identify where donation boxes or other textile waste drop off locations are. 
+The intended audience of this map was the general public. As there are varying levels of familiarity with 
+technology, with my current skills and taking into account the diverse user demographic. I limited the 
+functionality of this map to ensure that information was conveyed in a simple to understand way. In a 
+project that I conducted last year surrounding textile waste in Metro Vancouver. It was apparent that 
+there was a lack of a centralized information source that took into account locations of commercial 
+recyclers of textile waste, thrift shops, recycling centers and donation bins owned and operated by 
+different charities that reside in the Metro Vancouver area. As mentioned before, I took into account 
+the diverse user demographic that would use this map as a tool to identify the closest recycling “depot” 
+to where they are. Simple circle point symbols were used to classify the different types of recycling 
+depot s there were. The depots were roughly classified into Charity, Second hand, Thrift Shop, Retail, 
+Social Services, Recycling Facility. Charity are essentially non-profit organizations that take in textile 
+clothes/textile waste for charitable purposes such as Big Brothers. Second Hand and Thrift Shop depots  
+overlap in terms of characteristics as there was as they were categorized differently. A group member 
+and I had unknowingly labelled these depots differently and did not have the time to review 457 data 
+points that we had manually collected. These are essentially the same, examples include The Salvation 
+Army. Consignments are like thrift stores but cater to those who are looking for branded name clothing. 
+Recycling Centers are locations where the old textile waste is repurposed into new fabric and Retail 
+depots refer to clothing stores that accept old clothing.
+I believe that my map, despite its simplicity did send the message that I was hoping too. The base map 
+was chosen as it similar to what one would see when they use Google Maps. When the users zoom they 
+are able to see landmarks, or store fronts that they may be familiar with in the area to orient 
+themselves. In addition, categorized the symbols with a larger size (they were also the same size as 
+there is no apparent hierarchy to the data that was used) and based on their recycling type with bright 
+colors to ensure that those could differentiate between the different categorizes and to allow users who 
+may have a harder time seeing be able to interact with the map. Though I do recognize that this may not 
+be inclusive to users who may be blind or colorblind. Unfortunately, there is a lack of a legend as the 
+code did not work when I uploaded the html file. If I were to continue to work on this map, I would 
+ensure a legend, review the data that was collected last year to ensure accuracy, if it was up today, and 
+to recategorize some of the depot locations and add descriptions. I would also like to add in a 
+functionality where people could type in their address and have the map move their location to improve 
+the user experience. I also considered creating a 2 km radius around the points, however, I didn’t know 
+the scale of the map and was unable to do so.
