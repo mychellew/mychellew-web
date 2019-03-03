@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Display a map</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+  <link href='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+
+  <script src='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+  <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+
+  <div id='map'></div>
+
+  <style>
+    body {
+      margin:0;
+      padding:0;
+    }
+    #map {
+      position:absolute;
+      top:0;
+      bottom:0;
+      width:100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id='map'></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
+
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/myche11ew/cjsp7o78u125h1fqxnwyugocc',
+  center: [-123.105221, 49.256569],
+  zoom: 11.7
+});
+
+var public_art =
+map.addSource('source_id',
+{ type: 'csv',
+  data: https://raw.githubusercontent.com/mychellew/GEOB472_lab2/master/lab2-interactive_mapping/public_art.csv?token=AsUZ6IU-9iTuExObr6UpSPsO0nO_Z_8cks5cewwWwA%3D%3D});
+};
+var skystations =
+map.addSource('source_id',
+{ type: 'geojson',
+  data: https://raw.githubusercontent.com/mychellew/GEOB472_lab2/master/lab2-interactive_mapping/skystations.geojson?token=AsUZ6KGe5oTzvAE4WoulEpP558oW0A_Tks5cewtlwA%3D%3D});
+};
+var neighbourhood_income =
+map.addSource('source_id',
+type: 'geojson',
+data: https://raw.githubusercontent.com/mychellew/GEOB472_lab2/master/lab2-interactive_mapping/2016income84.geojson?token=AsUZ6LVBSamwASBjsQ82VzBhff15GI27ks5cewtLwA%3D%3D});
+
+map.on('load', function() {
+  map.addLayer({
+    id: 'skystations',
+    type: 'symbol',
+    source: {
+      type: 'geojson',
+      data: skystations
+    },
+    layout: {
+      'icon-image': 'rail-light-15'
+    },
+    paint: { }
+  });
+  map.addLayer({
+    id: 'public_art',
+    type: 'symbol',
+    source: {
+      type: 'geojson',
+      data: public_art
+    },
+    layout: {
+      'icon-image': 'art-gallery-15'
+    },
+    paint: { }
+  });
+});
+
+var popup = new mapboxgl.Popup();
+
+// Styling of the cursor when it is over a point of interest
+map.on('mousemove', function(e) {
+  var features = map.queryRenderedFeatures(e.point, { layers: ['public_art', 'skystations'] });
+  if (!features.length) {
+    popup.remove();
+    return;
+  }
+  var feature = features[0];
+
+  popup.setLngLat(feature.geometry.coordinates)
+    .setHTML(feature.properties.Name)
+    .addTo(map);
+
+  map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+});
+
+map.addSource('nearest-skystations', {
+  type: 'geojson',
+  data: {
+    type: 'FeatureCollection',
+    features: [
+    ]
+  }
+});
+
+map.on('click', function(e) {
+  // Return any features from the 'public art' layer whenever the map is clicked
+  var libraryFeatures = map.queryRenderedFeatures(e.point, { layers: ['public_art'] });
+  if (!public_artFeatures.length) {
+    return;
+  }
+  var public_artFeature = public_artFeatures[0];
+
+  // Using Turf, find the nearest transit stop to public art when clicked
+  var nearestSkystations = turf.nearest(public_artFeature, skystations);
+
+  // If a nearest public art is found
+  if (nearestSkystations !== null) {
+    // Update the 'nearest-public_art' data source to include
+    // the nearest public art
+    map.getSource('nearest-skystations').setData({
+      type: 'FeatureCollection',
+      features: [
+        nearestSkystations
+      ]
+    });
+    // Create a new circle layer from the 'nearest-skystation' data source
+    map.addLayer({
+      id: 'nearest-skystations',
+      type: 'circle',
+      source: 'nearest-skystations',
+      paint: {
+        'circle-radius': 12,
+        'circle-color': '#486DE0'
+      }
+    }, 'skystations');
+  }
+});
+
+</script>
+
+</body>
+</html>
