@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Public Art in Vancouver, BC</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+
+<div id='map'></div>
+<div class='map-overlay' id='features'><h2> Vancouver Public Art and Transit</h2><div id='pd'><p>Hover over a point!</p></div></div>
+<div class='map-overlay' id='legend'></div>
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+h2,
+h3 {
+  margin: 10px;
+  font-size: 1.2em;
+}
+
+h3 {
+  font-size: 1em;
+}
+
+p {
+  font-size: 0.85em;
+  margin: 10px;
+  text-align: left;
+}
+
+/**
+* Create a position for the map
+* on the page */
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+/**
+* Set rules for how the map overlays
+* (info box and legend) will be displayed
+* on the page. */
+.map-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  margin-right: 20px;
+  font-family: Arial, sans-serif;
+  overflow: auto;
+  border-radius: 3px;
+}
+
+#features {
+  top: 0;
+  height: 100px;
+  margin-top: 20px;
+  width: 250px;
+}
+
+#legend {
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  height: 150px;
+  margin-bottom: 40px;
+  width: 100px;
+}
+
+.legend-key {
+  display: inline-block;
+  border-radius: 20%;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+}
+
+  <style>
+    body { margin:0; padding:0; }
+    #map { position:absolute; top:0; bottom:0; width:100%; }
+  </style>
+</head>
+<body>
+
+  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.2/mapbox-gl-geocoder.min.js'></script>
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.2/mapbox-gl-geocoder.css' type='text/css' />
+  <style>
+  .geocoder {
+      position:absolute;
+      z-index:1;
+      width:50%;
+      left:50%;
+      margin-left:-25%;
+      top:20px;
+  }
+  .mapboxgl-ctrl-geocoder { min-width:100%; }
+
+  </style>
+  <div id='map'></div>
+  <div id='geocoder' class='geocoder'></div>
+
+  <link href='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+  <script src='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+  <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+
+  <style>
+  .mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  }
+  </style>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
+
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/myche11ew/cjsp7o78u125h1fqxnwyugocc',
+  center: [-123.105221, 49.256569],
+  zoom: 11.7
+});
+
+//Geocoder from MapBox Example
+var geocoder = new MapboxGeocoder({
+accessToken: mapboxgl.accessToken
+});
+
+document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+
+// This code was taken from the MabBox Turf.js example to identify the closest transit stop
+// (skytrain or bus) from a selected public art piece
+
+map.on ('load', function () {
+  var public_art =
+  map.addSource('source_id',
+  { type: 'csv',
+    data: https://raw.githubusercontent.com/mychellew/GEOB472_lab2/master/lab2-interactive_mapping/public_art.csv?token=AsUZ6IU-9iTuExObr6UpSPsO0nO_Z_8cks5cewwWwA%3D%3D});
+  };
+  var stations =
+  map.addSource('source_id',
+  { type: 'geojson',
+    data: https://raw.githubusercontent.com/mychellew/GEOB472_lab2/master/lab2-interactive_mapping/skystations.geojson?token=AsUZ6KGe5oTzvAE4WoulEpP558oW0A_Tks5cewtlwA%3D%3D});
+  };
+  var neighbourhood_income =
+  map.addSource('source_id',
+  type: 'geojson',
+  data: https://raw.githubusercontent.com/mychellew/GEOB472_lab2/master/lab2-interactive_mapping/2016income84.geojson?token=AsUZ6LVBSamwASBjsQ82VzBhff15GI27ks5cewtLwA%3D%3D});
+});
+
+// Legend for Income data
+  var layers = ['0 - 20,000', '20,001 - 40,000', '40,001 +'];
+  var colors = ['#fd8b8b', '#f93e3e', '#a60303', '#5e2121'];
+
+//Formatting of the data
+  for (i = 0; i < layers.length; i++) {
+    var layer = layers[i];
+    var color = colors[i];
+    var item = document.createElement('div');
+    var key = document.createElement('span');
+    key.className = 'legend-key';
+    key.style.backgroundColor = color;
+
+    var value = document.createElement('span');
+    value.innerHTML = layer;
+    item.appendChild(key);
+    item.appendChild(value);
+    legend.appendChild(item);
+  }
+  map.on('mousemove', function(e) {
+    var Income = map.queryRenderedFeatures(e.point, {
+      layers: ['neighbourhood_income']
+    });
+
+//This is the code for the text in the box located in the corner of the map. This is the text that will display when there is a cursor over this
+    if (neighbourhood_income.length > 0) {
+      document.getElementById('pd').innerHTML = '<h3><strong>' + neighbourhood_income[0].properties.name + '</strong></h3><p><strong><em>' + neighbourhood_income[0].properties.Income + '</strong> Median Household Income</em></p>';
+    } else {
+      document.getElementById('pd').innerHTML = '<p>Hover over a Neighbourhood!</p>';
+    }
+  );
+
+// Code for data pop-ups - Select the layers in which the pop-up function will work
+var popup = new mapboxgl.Popup();
+map.on('mousemove', function(e) {
+  var features = map.queryRenderedFeatures(e.point, { layers: ['public_art', 'stations', 'neighbourhood_income'] });
+  if (!features.length) {
+    popup.remove();
+    return;
+  }
+  var feature = features[0];
+
+//When the mouse is over the point
+  popup.setLngLat(feature.geometry.coordinates)
+    .setHTML(feature.properties.Name)
+    .addTo(map);
+
+  map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+});
+
+map.addSource('nearest-skytrain', {
+  type: 'geojson',
+  data: {
+    type: 'FeatureCollection',
+    features: [
+    ]
+  }
+});
+
+//Load data used for interactivity
+map.on('click', function(e) {
+  // Return any features from the 'public art' layer whenever the map is clicked
+  var public_artFeatures = map.queryRenderedFeatures(e.point, { layers: ['public_art'] });
+  if (!public_artFeatures.length) {
+    return;
+  }
+  var public_artFeature = public_artFeatures[0];
+
+  // Using Turf, find the nearest Skytrain to Public Art clicked
+  var nearestSkytrian = turf.nearest(public_artFeature, skytrain);
+
+  // If a nearest Skytrain is found
+  if (nearestSkytrain !== null) {
+    // Update the 'nearest-public_art' data source to include
+    // the nearest public art piece
+    map.getSource('nearest-skytrain').setData({
+      type: 'FeatureCollection',
+      features: [
+        nearestSkytrain
+      ]
+    });
+
+    // Create a new circle layer from the 'nearest-skytrain' data source
+    map.addLayer({
+      id: 'nearest-station',
+      type: 'circle',
+      source: 'nearest-skytrain',
+      paint: {
+        'circle-radius': 12,
+        'circle-color': '#486DE0'
+      }
+    }, 'skytrain');
+  }
+});
+
+// Toggle between different layers
+
+var toggleableLayerIds = [ 'neighbourhood_income', 'DA_income2016' ];
+
+for (var i = 0; i < toggleableLayerIds.length; i++) {
+var id = toggleableLayerIds[i];
+
+var link = document.createElement('a');
+link.href = '#';
+link.className = 'active';
+link.textContent = id;
+
+link.onclick = function (e) {
+var clickedLayer = this.textContent;
+e.preventDefault();
+e.stopPropagation();
+
+var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+if (visibility === 'visible') {
+map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+this.className = '';
+} else {
+this.className = 'active';
+map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+}
+};
+
+var layers = document.getElementById('menu');
+layers.appendChild(link);
+}
+
+
+</script>
+
+</body>
+</html>
