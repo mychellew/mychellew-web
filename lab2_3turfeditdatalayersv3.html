@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Public Art and Transit Stops in Vancouver</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+  <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+
+  <div id='map'></div>
+  <div class='map-overlay' id='features'><h2>Public Art and Transit Stops</h2><div id='pd'><p>Click on a Purple Point to find the closest SkyTrain station</p></div></div>
+  <div class='map-overlay' id='legend'><div id='pd'><p>Median Household Income ($)</p></div></div>
+
+  <style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+
+  body {
+    background: #404040;
+    color: #228B22;
+    font: 500 16px/14px 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  h2,
+  h3 {
+    margin: 10px;
+    font-size: 1.2em;
+  }
+
+  h3 {
+    font-size: 1em;
+  }
+
+  p {
+    font-size: 0.85em;
+    margin: 10px;
+    text-align: left;
+  }
+
+  /**
+  * Create a position for the map
+  * on the page */
+  #map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+  }
+
+  /**
+  * Set rules for how the map overlays
+  * (info box and legend) will be displayed
+  * on the page. */
+  .map-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.8);
+    margin-right: 10px;
+    font-family: Arial, sans-serif;
+    overflow: auto;
+    border-radius: 3px;
+  }
+
+  #features {
+    top: 0;
+    height: 100px;
+    margin-top: 70px;
+    width: 240px;
+  }
+
+  #legend {
+    padding: 5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    line-height: 18px;
+    height: 120px;
+    margin-bottom: 40px;
+    width: 200px;
+  }
+
+  .legend-key {
+    display: inline-block;
+    border-radius: 15%;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+  }
+
+  </style>
+</head>
+<body>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.2/mapbox-gl-geocoder.min.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.2/mapbox-gl-geocoder.css' type='text/css' />
+<div id='map'></div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/myche11ew/cjsp7o78u125h1fqxnwyugocc',
+  center: [-123.116226, 49.246292],
+  zoom: 11
+});
+
+// Adding a Geocoder: Taken from MapBox's Geocoder Example
+  map.addControl(new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken
+}));
+
+// Adding the Neighbourhood Income legend
+map.on('load', function() {
+  var layers = ['0 - 20,000', '20,001 - 40,000', '40,001 +'];
+  var colors = ['#fd8b8b', '#f93e3e', '#a60303', '#5e2121']
+
+  for (i = 0; i < layers.length; i++) {
+    var layer = layers[i];
+    var color = colors[i];
+    var item = document.createElement('div');
+    var key = document.createElement('span');
+    key.className = 'legend-key';
+    key.style.backgroundColor = color;
+
+    var value = document.createElement('span');
+    value.innerHTML = layer;
+    item.appendChild(key);
+    item.appendChild(value);
+    legend.appendChild(item);
+
+  }
+});
+
+//Load the Data to be used for Turf.js : This was taken using the Mapbox and Turf.js Example
+
+map.on('load', function(){
+  map.addLayer({
+    id: 'public_art',
+    source: {
+      type: 'vector',
+      url: 'mapbox://myche11ew.4jzh0z8l'
+    },
+    source-layer: 'public_art-85jss3',
+  });
+
+  map.addLayer({
+    id: 'stations',
+    source: {
+      type: 'vector',
+      url: 'mapbox://myche11ew.1lytmuqt'
+    },
+    source-layer: 'stations-2g65js',
+  });
+});
+
+// Making the data Interactive - Adding Popups
+var popup = new mapboxgl.Popup();
+
+//When the mouse hovers over the public art layer and station layer, add a popup
+map.on('mousemove', function(e) {
+  var features = map.queryRenderedFeatures(e.point, { layers: ['public_art-85jss3', 'stations-2g65js'] });
+  if (!features.length) {
+    popup.remove();
+    return;
+  }
+  var feature = features[0];
+
+  popup.setLngLat(feature.geometry.coordinates)
+    .setHTML(feature.properties.Name)
+    .addTo(map);
+
+//stylize the cursor when you are over the 2 layers
+  map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+});
+
+map.addSource('nearest-stations', {
+  type: 'geojson',
+  data: {
+    type: 'FeatureCollection',
+    features: [],
+  };
+});
+
+// Finding the closest transit station from a public art piece;
+map.on('click', function(e) {
+  var stationsFeatures = map.queryRenderedFeatures(e.point, { layers: ['public_art-85jss3'] });
+  if (!stationsFeatures.length) {
+    return;
+  }
+
+  var public_artFeature = public_artFeatures[0];
+
+  var neareststations = turf.nearest(public_artFeature, stations);
+
+  if (neareststations !== null) {
+
+    map.getSource('nearest-stations').setData({
+      type: 'FeatureCollection',
+      features: [neareststations]
+    });
+
+    map.addLayer({
+      id: 'nearest-stations',
+      type: 'circle',
+      source: 'nearest-stations',
+      paint: {
+        'circle-radius': 12,
+        'circle-color': '#486DE0'
+      }
+    }, 'stations');
+  }
+});
+
+</script>
+
+</body>
+</html>
