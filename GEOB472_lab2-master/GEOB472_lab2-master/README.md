@@ -2,6 +2,8 @@ Self Reflections: Accessibility to Public Art in the City of Vancouver
 
 By: Mychelle Wong | GEOB472 - Lab 2
 
+![](/GEOB472_lab2-master/GEOB472_lab2-master/GEOB472_image.PNG)
+
 Figure 1. Screenshot of Map Interactivity. Looking at the Neighbourhood Income data, most of the public art this occurs in areas with low to mid household incomes. Interestingly, the area in the south False Creek area (which had the highest neighbourhood income) had lower concentrations of public art. From first glance it can be seen that there is an obvious clustering of public art installations located in the Downtown area of Vancouver which may be due to abundance of buisnesses. As well, Downtown Vancouver is a frequented tourist attraction. The screenshot shows that the user can search for their location, find a public art piece and find the closest skytrian stop.
 
 Collaborations and reliance on other resources:
