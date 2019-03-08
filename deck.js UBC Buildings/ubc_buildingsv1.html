@@ -1,0 +1,151 @@
+<html>
+  <head>
+    <title>UBC Buildings with deck.js</title>
+
+    <script src="https://unpkg.com/deck.gl@^6.0.0/deckgl.min.js"></script>
+
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js"></script>
+
+    <style type="text/css">
+      body {
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+      }
+      #tooltip:empty {
+        display: none;
+      }
+      #tooltip {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 11px;
+        position: absolute;
+        padding: 4px;
+        margin: 8px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        max-width: 300px;
+        font-size: 10px;
+        z-index: 9;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="tooltip"></div>
+  </body>
+
+  <script type="text/javascript">
+
+    const {DeckGL, GeoJsonLayer} = deck;
+
+    const LIGHT_SETTINGS = {
+      lightsPosition: [-125, 50.5, 5000, -122.8, 48.5, 8000],
+      ambientRatio: 0.2,
+      diffuseRatio: 0.5,
+      specularRatio: 0.3,
+      lightsStrength: [2.0, 0.0, 1.0, 0.0],
+      numberOfLights: 2
+    };
+
+// Legend Criteria
+    const COLOR_SCALE = [
+// younger buildings are lighter coloured
+      [65, 182, 196],
+      [127, 205, 187],
+      [199, 233, 180],
+      [237, 248, 177],
+      [255, 255, 204],
+      [255, 237, 160],
+      [254, 217, 118],
+      [254, 178, 76],
+      [253, 141, 60],
+      [252, 78, 42],
+      [227, 26, 28],
+      [189, 0, 38],
+      [128, 0, 38]
+  // older buildings are darker coloured
+    ];
+
+//load the UBC Building data layer from Data Source
+    const geojsonLayer = new GeoJsonLayer({
+      'data':'https://raw.githubusercontent.com/mychellew/mychellew-web/master/deck.js%20UBC%20Buildings/buildings_data',
+      'opacity': 0.8,
+      'stroked': false,
+      'filled': true,
+      'extruded': true,
+      'wireframe': true,
+      'fp64': true,
+      'lightSettings': LIGHT_SETTINGS,
+
+      getElevation: f =>
+        (f.properties.COUNT_FLOORS*10),
+      getFillColor: f =>
+        colorScale(f.properties.DATE_BUILT),
+      getLineColor: [255, 255, 255],
+
+      pickable: true,
+      onHover: updateTooltip
+    });
+
+    new DeckGL({
+      'mapboxApiAccessToken': 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w',
+      'mapStyle':'mapbox://styles/mapbox/light-v9',
+      'latitude': 49.2606,
+      'longitude': -123.2460,
+      'zoom': 11,
+      'maxZoom': 16,
+      'pitch': 45,
+      'layers': [geojsonLayer]
+    });
+
+// Code assigning the different building categories into a class colour
+// Information for both Building Age and Building Floor
+    function colorScale(x) {
+      if (x){
+        // Extract the year of being built
+      var build_year = parseInt(x.substring(0,4))
+      var year_range = [1911, 1921, 1924, 1925, 1926, 1927, 1929,
+                       1930, 1940, 1945, 1947, 1948, 1949, 1950,
+                       1952, 1955, 1956, 1957, 1958, 1959, 1960,
+                       1961, 1962, 1963, 1964, 1965, 1966, 1967,
+                       1968, 1969, 1970, 1971, 1972, 1973, 1974,
+                       1975, 1976, 1977, 1978, 1979, 1980, 1981,
+                       1982, 1983, 1984, 1985, 1986, 1987, 1988,
+                       1989, 1990, 1991, 1992, 1993, 1994, 1995,
+                       1996, 1997, 1998, 1999, 2000, 2001, 2002,
+                       2003, 2004, 2005, 2006, 2007, 2008, 2009,
+                       2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017];
+
+      // Sort the buildings by building age into different colour classes
+      // The buildings are sorted using the equal intervals
+      var colour_scale = (2017-build_year)/10;
+      var i = Math.floor(colour_scale);
+      }
+
+      if (x < 0) {
+        return COLOR_SCALE[i] || COLOR_SCALE[0];
+      }
+      return COLOR_SCALE[i] || COLOR_SCALE[COLOR_SCALE.length - 1];
+    }
+
+//Code for the popup window
+    function updateTooltip({x, y, object}) {
+      const tooltip = document.getElementById('tooltip');
+
+      if (object) {
+        tooltip.style.top = `${y}px`;
+        tooltip.style.left = `${x}px`;
+        tooltip.innerHTML = `
+    <div><b>Building Height &nbsp;</b></div>
+    <div><div>${object.properties.COUNT_FLOORS} floors </div></div>
+    <div><b>Building Age</b></div>
+    <div>${Math.round(object.properties.DATE_BUILT)}</div>
+    `;
+      } else {
+        tooltip.innerHTML = '';
+      }
+    }
+
+  </script>
+</html>
