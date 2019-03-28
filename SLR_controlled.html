@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <title>Sea Level</title>
+   <link rel="stylesheet" href="https://openlayers.org/en/v3.20.1/css/ol.css" type="text/css">
+   <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+   <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+   <script src="https://openlayers.org/en/v3.20.1/build/ol.js"></script>
+   <style>
+     #level {
+       display: inline-block;
+       width: 150px;
+       vertical-align: text-bottom;
+     }
+
+     a.location {
+       cursor: pointer;
+     }
+   </style>
+ </head>
+ <body>
+   <div id="map" class="map"></div>
+   <label>
+     Climate Warming Scenario
+     <input id="level" type="range" min="0" max="5" value="1"/>
+     +<span id="output"></span> degrees Celcius
+   </label>
+
+   <script>
+     function flood(pixels, data) {
+       var pixel = pixels[0];
+       if (pixel[3]) {
+         var height = -10000 + ((pixel[0] * 256 * 256 + pixel[1] * 256 + pixel[2]) * 0.1);
+         if (height <= data.level) {
+           pixel[0] = 145;
+           pixel[1] = 175;
+           pixel[2] = 186;
+           pixel[3] = 255;
+         } else {
+           pixel[3] = 0;
+         }
+       }
+       return pixel;
+     }
+
+     var key = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
+     var elevation = new ol.source.XYZ({
+       url: 'https://api.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + key,
+       crossOrigin: 'anonymous'
+     });
+
+     var raster = new ol.source.Raster({
+       sources: [elevation],
+       operation: flood
+     });
+
+     var map = new ol.Map({
+       target: 'map',
+       layers: [
+         new ol.layer.Tile({
+           source: new ol.source.XYZ({
+             url: 'https://api.mapbox.com/styles/v1/tschaub/ciutc102t00c62js5fqd47kqw/tiles/256/{z}/{x}/{y}?access_token=' + key
+           })
+         }),
+         new ol.layer.Image({
+           opacity: 0.4,
+           source: raster
+         })
+       ],
+       view: new ol.View({
+         center: ol.proj.fromLonLat([-123.152, 49.263]),
+         zoom: 11
+       })
+     });
+
+     var control = document.getElementById('level');
+     var output = document.getElementById('output');
+     control.addEventListener('input', function() {
+       output.innerText = control.value;
+       raster.changed();
+     });
+     output.innerText = control.value;
+
+     raster.on('beforeoperations', function(event) {
+       event.data.level = control.value;
+     });
+
+   </script>
+ </body>
+</html>
