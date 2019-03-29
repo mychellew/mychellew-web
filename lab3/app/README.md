@@ -1,24 +1,8 @@
-This lab was inspired by the Frame Academy's Tutorial which created as WebXR Photosphere Gallery with JavaScript. The Blurb below is the original ReadMe from the project that I had used as a guideline and forked over using Glitch. For the lab reflection 
+Lab 3 Reflection:
 
-# Your Frame Academy Starter Project
+Originally, I had worked on a project through Unity with the aim to create a location game (using Mapbox SDK) - similar to Pokemon Go used to educate UBC's peer program student leaders about the wellness, professional development resources (they would catch animals as they walked on campus and they would have to collect different types of resources to be able to share with their peers) on campus for when they would roam around campus for their training sessions in September and March. The game was in the process of being created through following <a href="https://www.youtube.com/watch?v=RhG1kfDBhgM" target="blank"></a>, speaking with peers, reviewing help fourms and with the help of a friend who had experience in Unity and videogame design. However, due to technical difficulties the project was stopped.
 
-Welcome to the Frame Academy Starter Project. On the left, find the index.html file and select it to get started creating your 3D website! 
+For this new project, I was inspired by this tutorial through A-frame's tutorial
+<a href="https://learn.framevr.io/project4" target="_blank">Frame Academy Project 4</a> : Adding Interactivity to Your WebXR Site With JavaScript. 
 
-Find our projects, workshops, and community at [Frame Academy](https://learn.framevr.io)
-
-Have questions or ideas? Check out our <a href="https://discord.gg/rpEQQGJ" target="_blank">online community</a> 
-
-**About Frame Academy**
-
-We help teachers and students learn how to create cross-platform, 3D web sites with coding and design basics. WebXR is here.
-
-Frame Academy is also a community with places to ask questions, share projects, and showcase events. 
-
-<a href="https://learn.framevr.io/project1" target="_blank">Frame Academy Project 1</a> : Create a WebXR Site With Basic HTML (how to import shapes, 3D models, photospheres, images, text into your scene)
-
-
-<a href="https://learn.framevr.io/project2" target="_blank">Frame Academy Project 2</a> : Animate Your WebXR Site With Components
-
-<a href="https://learn.framevr.io/project3" target="_blank">Frame Academy Project 3</a> : Relative Position and Grouping Entities
-
-<a href="https://learn.framevr.io/project4" target="_blank">Frame Academy Project 4</a> : Adding Interactivity to Your WebXR Site With JavaScript
+Due time constraints, the conceptualization of this project is limited in its scope.
