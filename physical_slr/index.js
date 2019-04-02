@@ -84,7 +84,7 @@ elevTiles.drawTile = function (canvas, tile, zoom) {
 
     // Source of image tile
     imageObj.crossOrigin = 'Anonymous';
-    imageObj.src = 'https://a.tiles.mapbox.com/v4/mapbox.terrain-rgb/'+zoom+'/'+tile.x+'/'+tile.y+'.pngraw?access_token=' + L.mapbox.accessToken;
+    imageObj.src = 'https://a.tiles.mapbox.com/v4/mapbox.terrain-rgb/'+zoom+'/'+tile.x+'/'+tile.y+'.pngraw?access_token=' + mapboxgl.accessToken;
 
 };
 
