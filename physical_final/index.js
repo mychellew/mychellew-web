@@ -7,7 +7,7 @@ L.mapbox.accessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3Jvd
 var map = L.map('map_canvas', {
     worldCopyJump: true,
     doubleClickZoom: false,
-    center: [38, -120],
+    center: [49, -123],
     zoom: 13,
     scrollWheelZoom: false
     });
