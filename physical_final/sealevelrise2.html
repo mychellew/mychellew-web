@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Physical Impacts of Sea Level Rise in Vancouver</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <link rel="stylesheet" href="//www.mapbox.com/base/latest/base.css">
+  <link rel="stylesheet" href="site.css">
+  <link rel="canonical" href="https://labs.mapbox.com/bites/00307/">
+</head>
+<body>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+  <script src="https://api.mapbox.com/mapbox.js/v2.4.o/mapbox.js"  rel='stylesheet'></script>
+  <script src="https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js/plugins/leaflet-hash/v0.2.1/leaflet-hash.js"></script>
+
+<div id='map_canvas' class="maphold pin-left leaflet-container leaflet-retina leaflet-fade-anim" tabindex="0"></div>
+<div class ="leaflet-tile-pane">
+  <div class="leaflet-layer">
+    <div class="leaflet-tile-container"></div>
+    <div class="leaflet-tile-container leaflet-zoom-animated">
+  </div>
+</div>
+<div class="leaflet-shadow-paine"></div>
+<div class="leaflet-overlay-pane"></div>
+<div class="leaflet-marker-pane"></div>
+<div class="leaflet-popup-pane"></div>
+</div>
+
+
+<script type="text/javascript" src="js/general-gio-utils.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+
+
+</body>
+</html>
