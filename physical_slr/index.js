@@ -14,7 +14,8 @@ var map = L.map('map_canvas', {
 
 var hash = L.hash(map);
 
-L.tileLayer('mapbox.outdoors').addTo(map);
+L.tileLayer(
+'https://api.mapbox.com/styles/v1/mapbox/outdoors/tiles/{z}/{x}/{y}?access_token'+ mapboxgl.accessToken', {).addTo(map);
 
 var elevTiles = new L.TileLayer.Canvas({
     unloadInvisibleTiles:true,
