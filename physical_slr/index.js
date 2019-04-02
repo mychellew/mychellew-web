@@ -2,7 +2,7 @@ var tileSize,
     everyOther = true,
     drawElev = false;
 
-L.mapbox.accessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
+mapboxgl.accessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
 
 var map = L.map('map_canvas', {
     worldCopyJump: true,
