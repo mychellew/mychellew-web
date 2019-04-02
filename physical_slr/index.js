@@ -7,14 +7,14 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3Jvd
 var map = L.map('map_canvas', {
     worldCopyJump: true,
     doubleClickZoom: false,
-    center: [38, -120],
-    zoom: 13,
+    center: [49, -123],
+    zoom: 10,
     scrollWheelZoom: false
     });
 
 var hash = L.hash(map);
 
-mapboxgl.tileLayer('mapbox.outdoors').addTo(map);
+L.tileLayer('mapbox.outdoors').addTo(map);
 
 var elevTiles = new L.TileLayer.Canvas({
     unloadInvisibleTiles:true,
