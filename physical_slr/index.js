@@ -16,7 +16,7 @@ var hash = new L.Hash(map);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/mychellew/outdoors/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w').addTo(map);
 
-var elevTiles = new L.tileLayer.Canvas({
+var elevTiles = new L.GridLayer({
     unloadInvisibleTiles:true,
     attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
 });
