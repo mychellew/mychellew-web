@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang='en'>
+<meta charset="utf-8">
+<head>
+	<title>Physical Vulnerability: Sea Level Rise in Vancouver</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet-src.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script src="https://mychellew.github.io/mychellew-web/physical/Leaflet.TileLayer.GL.js"></script>
+	<script src="../dist/leaflet.customsearchbox.min.js"></script>
+<link href="../dist/searchbox.min.css" rel="stylesheet" />
+</head>
+<body>
+	<style>
+	.map-overlay {
+	font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	position: absolute;
+	width: 25%;
+	top: 0;
+	left: 0;
+	padding: 10px;
+	}
+
+	.map-overlay .map-overlay-inner {
+	background-color: #fff;
+	box-shadow:0 1px 2px rgba(0, 0, 0, 0.20);
+	border-radius: 3px;
+	padding: 10px;
+	margin-bottom: 10px;
+	}
+
+/* Location of one of the smaller boxes */
+
+	.map-overlay h2 {
+	line-height: 24px;
+	display: block;
+	margin: 0 0 10px;
+	}
+
+	/* HTML Code for the slider */
+	.map-overlay input {
+	background-color: transparent;
+	display: inline-block;
+	width: 100%;
+	position: relative;
+	margin: 0;
+	cursor: ew-resize;
+	}
+
+	</style>
+
+	<div id="map"></div>
+
+	<div class='map-overlay top'>
+	<div class='map-overlay-inner'>
+	<h2>Sea Level Rise Scenarios</h2>
+	<label id='Climate Warming Scenario'></label>
+	<input id='slider' type='range' min='0' max='11' step='1' value='0' />
+	</div>
+	  <div class='map-overlay-inner'>
+	    <div id='legend' class='legend'>
+	      <div class='bar'></div>
+	      <div>Sea Level Rise (m)</div>
+	    </div>
+	  </div>
+	</div>
+	<div>Zoom: <span id="zoom"></div>
+
+	<script type="text/javascript">
+
+var fragmentShader = `
+void main(void) {
+	highp vec4 texelColour = texture2D(uTexture0, vec2(vTextureCoords.s, vTextureCoords.t));
+
+	// Height is represented in TENTHS of a meter
+	highp float height = (
+		texelColour.r * 255.0 * 256.0 * 256.0 +
+		texelColour.g * 255.0 * 256.0 +
+		texelColour.b * 255.0 )
+	-100000.0;
+
+	if (height > 100.0) {
+		// High (>30m) over ground, transparent
+		gl_FragColor = vec4(0.5, 0.5, 0.5, 0.0);
+	} else if (height > 50.0) {
+		// Over ground but somewhat close to sea level, yellow
+		gl_FragColor = vec4(0.9, 0.9, 0.5, 0.4);
+	} else if (height > 0.0) {
+		// Over ground but very close to sea level, red
+		gl_FragColor = vec4(0.9, 0.5, 0.5, 0.4);
+	} else {
+		// Water, some semiopaque blue
+		gl_FragColor = vec4(0.05, 0.1, 0.9, 0.4);
+	}
+}
+`
+		var tileSize = 256;
+
+		var map = L.map('map');
+
+		var mapboxAccessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
+
+		var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
+			attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
+		}).addTo(map);
+
+		var antitoner = L.tileLayer.gl({
+			fragmentShader: fragmentShader,
+			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
+		}).addTo(map);
+
+
+		map.on('zoomend', function(ev){
+			document.getElementById('zoom').innerHTML = map.getZoom();
+		});
+
+	</script>
+</body>
+</html>
