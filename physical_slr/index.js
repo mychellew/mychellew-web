@@ -12,7 +12,7 @@ var map = L.map('map_canvas', {
     scrollWheelZoom: false
     });
 
-var hash = L.hash(map);
+var hash = new L.hash(map);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/mychellew/outdoors/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w').addTo(map);
 
