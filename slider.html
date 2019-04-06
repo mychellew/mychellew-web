@@ -90,9 +90,9 @@ void main(void) {
 
 // VARIABLES TO BE USED:
 var soilsLayer;
-var GEOJSONsoil;
-var data;
+var soildata;
 var height;
+var LSN;
 
 //define the style for the soils layers
 function soilStyle(feature) {
@@ -104,11 +104,19 @@ function soilStyle(feature) {
 };
 
 // load the GeoJSON data from the web
-$.getJSON ("https://raw.githubusercontent.com/mychellew/mychellew-web/master/soils.geojson",
-function (GEOJSONsoil){
-	GEOJSONsoil = data;
-	console.log(data)
+var soildata = $.getJSON ("https://mychellew.github.io/mychellew-web/soils.geojson",
+function (soildata){
 });
+
+map.on('load', function (){
+	map.addLayer({
+		'id': 'soildata',
+		'source':{
+			'type': 'geojson',
+			'data': soildata
+		},
+		'type': 'polygon'
+	})});
 
 	//Load the Soil Data
  //soilLayer = L.geoJSON(GEOJSONsoil).addTo(map);
@@ -131,21 +139,21 @@ function LSN(GEOJSONsoil){
 };
 
 // Classify the data based on their LSN value
-function onEachSoil(feature, layer){
+function onEachSoil(LSN){
 	// This is the class that will experience no or little land damage
 	if (LSN <= 10)
 	return '#fd8b8b';
 	// Light to Moderate
-	if (LSN <= 20)
+	if ((LSN > 10) && (LSN <= 20))
 	return '#f93e3e';
 	// Moderate to Medium Damage
-	if (LSN <= 30)
+	if ((LSN > 20) && (LSN <= 30))
 	return '#a60303';
 	// Medium Damage
-	if (LSN <= 40)
+	if ((LSN > 10) && (LSN <= 40))
 	return '#5e2121';
 	// Severe Damage
-	if (LSN <= 50)
+	if ((LSN > 10) && (LSN <= 50))
 	return '#FF0000'
 };
 
