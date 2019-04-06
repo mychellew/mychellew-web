@@ -17,7 +17,6 @@
 	<script src="https://mychellew.github.io/mychellew-web/leaflet-slider.js"></script>
 
 		<!-- External CSS Packages -->
-
 			<link rel="stylesheet" href="https://mychellew.github.io/mychellew-web/leaflet.css" />
 			<link rel="stylesheet" href="https://mychellew.github.io/mychellew-web/leaflet-slider.css"/>
 
@@ -90,6 +89,8 @@ void main(void) {
 // LIQUEFACTION CODE //
 
 var soilsLayer;
+var GEOJSONsoil;
+var data;
 
 //define the style for the soils layers
 function soilStyle(feature) {
@@ -100,20 +101,15 @@ function soilStyle(feature) {
 	};
 };
 
-//Load the Soil Data
-var soilLayer = new L.geoJSON("GEOJSONsoil", {
-	style: soilStyle});
-	soilLayer.addTo(map);
-
 // load the GeoJSON data from the web
-$.getJSON ("https://raw.githubusercontent.com/mychellew/mychellew-web/master/soils.geojson"),
+$.getJSON ("https://raw.githubusercontent.com/mychellew/mychellew-web/master/soils.geojson",
 function (GEOJSONsoil){
-	GEOJSONsoil = GEOJSONsoil;
-	console.log(data)};
+	GEOJSONsoil = data;
+	console.log(data)
+});
 
-L.geoJSON("GEOJSONsoil", function(data){
-
-}).addTo(map);
+	//Load the Soil Data
+ //soilLayer = L.geoJSON(GEOJSONsoil).addTo(map);
 
 //Get the parameters needed to determine the LSN to be mapped:
 
@@ -127,9 +123,8 @@ function getEv(feature){
 	Ev = feature.properties.Ev
 };
 
-
 // Caluclate the LSN Value using the following equations and the following parameters
-function LSN(GEOJSONsoils){
+function LSN(GEOJSONsoil){
 	onEachFeaure(Math.log(feature.properties.depth + height) * feature.properties_Ev * 1000)
 };
 
@@ -176,17 +171,18 @@ function style(feature){
 	};
 }
 
-slider = L.control.slider(function(value) {
-	console.log(value);
-		// position: 'bottomleft',
-		// size: '250px',
-		// min: 0, max: 7,
-		// value: 0,
-	  // step: 1,
-		// collapsed: false,
-		// title: 'Sea Level Rise Scenarios',
-		// orientation: 'vertical',
-		// syncSlider: true,
+slider = L.control.slider(function(height) {
+	console.log(height);
+}, {
+		 position: 'bottomleft',
+		 size: '250px',
+		 min: 0, max: 7,
+		 value: 0,
+	   step: 1,
+		 collapsed: false,
+		 title: 'Sea Level Rise Scenarios (m)',
+		 orientation: 'vertical',
+		 syncSlider: true,
 	}).addTo(map);
 
 // Code for Legend
