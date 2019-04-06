@@ -80,7 +80,7 @@ void main(void) {
 		}).addTo(map);
 
 // Call Mapbox's Terrain-RGB map layer and add it to the map
-		var antitoner = L.tileLayer.gl({
+		var antitoner = L.gridLayer({
 			fragmentShader: fragmentShader,
 			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
 		}).addTo(map);
@@ -89,14 +89,31 @@ void main(void) {
 
 // LIQUEFACTION CODE //
 
+var soilsLayer;
+
+//define the style for the soils layers
+function soilStyle(feature) {
+	return {
+		fillColor: "#FF00FF",
+		fillOpacity: 1,
+    color: '#B04173',
+	};
+};
+
 //Load the Soil Data
-var GEOJSONsoils;
+var soilLayer = new L.geoJSON("GEOJSONsoil", {
+	style: soilStyle});
+	soilLayer.addTo(map);
 
 // load the GeoJSON data from the web
 $.getJSON ("https://raw.githubusercontent.com/mychellew/mychellew-web/master/soils.geojson"),
-function (data){
-	GEOJSONsoils = data;
+function (GEOJSONsoil){
+	GEOJSONsoil = GEOJSONsoil;
 	console.log(data)};
+
+L.geoJSON("GEOJSONsoil", function(data){
+
+}).addTo(map);
 
 //Get the parameters needed to determine the LSN to be mapped:
 
@@ -117,36 +134,62 @@ function LSN(GEOJSONsoils){
 };
 
 // Classify the data based on their LSN value
-function onEachSoil(feature,layer){
+function onEachSoil(feature, layer){
+	// This is the class that will experience no or little land damage
 	if (LSN <= 10)
 	return '#fd8b8b';
+	// Light to Moderate
 	if (LSN <= 20)
 	return '#f93e3e';
+	// Moderate to Medium Damage
 	if (LSN <= 30)
 	return '#a60303';
+	// Medium Damage
 	if (LSN <= 40)
 	return '#5e2121';
+	// Severe Damage
 	if (LSN <= 50)
 	return '#FF0000'
 };
 
-// Slider Code take from
+//code that may be helpful from leaflet
+// function getColor(LSN) {
+//     return LSN < 10 ? '#800026' :
+//            LSN < 20 ? '#BD0026' :
+//            LSN < 30 ? '#E31A1C' :
+//            LSN < 40  ? '#FC4E2A' :
+//            LSN < 50   ? '#FD8D3C' :
+//            LSN > 50   ? '#FEB24C' :
+//                       '#FFEDA0';
+// }
 
-slider = L.control.slider(function(height) {
-	console.log(height)
-	}, {
-		position: 'bottomleft',
-		size: '250px',
-		min: 0,
-		max: 7,
-		step: 1,
-		value: 0,
-		collapsed: false,
-		title: 'Sea Level Rise Scenarios',
-		orientation: 'vertical',
-		syncSlider: true,
-	}
-).addTo(map);
+// Slider Code take from Eclipse1979
+
+function style(feature){
+	return{
+		fillColor: onEachSoil(feature, layer),
+		weight: 1,
+		opacity: 0.85,
+		color: 'black',
+		dashArray: '3',
+		fillOpacity: 0.65
+	};
+}
+
+slider = L.control.slider(function(value) {
+	console.log(value);
+		// position: 'bottomleft',
+		// size: '250px',
+		// min: 0, max: 7,
+		// value: 0,
+	  // step: 1,
+		// collapsed: false,
+		// title: 'Sea Level Rise Scenarios',
+		// orientation: 'vertical',
+		// syncSlider: true,
+	}).addTo(map);
+
+// Code for Legend
 
 	</script>
 </body>
