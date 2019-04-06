@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang='en'>
+<meta charset="utf-8">
+<head>
+	<title>Physical Vulnerability: Sea Level Rise in Vancouver, B.C.</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Mapping Packages -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+	<!-- jQuery is a library that simplifies many things in JavaScript. Used to retrieve data from the web. -->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+	<!-- External JavaScript Packages -->
+	<script src="https://mychellew.github.io/mychellew-web/Leaflet.TileLayer.GL.js"></script>
+	<script src="https://mychellew.github.io/mychellew-web/leaflet.js"></script>
+	<script src="https://mychellew.github.io/mychellew-web/leaflet-slider.js"></script>
+
+		<!-- External CSS Packages -->
+
+			<link rel="stylesheet" href="https://mychellew.github.io/mychellew-web/leaflet.css" />
+			<link rel="stylesheet" href="https://mychellew.github.io/mychellew-web/leaflet-slider.css"/>
+
+</head>
+<body>
+
+	<div id="map" style='width:100%; max-height:100%; height:600px;'></div>
+
+	<script type="text/javascript">
+
+// This script to differentiate the various RGB values from the original Mapbox Terrain-RGB
+// has been sourced from the following GitHub
+// As per request for using this code:
+
+//"THE BEER-WARE LICENSE":
+//<ivan@sanchezortega.es> wrote this file. As long as you retain this notice you
+//can do whatever you want with this stuff. If we meet some day, and you think
+//this stuff is worth it, you can buy me a beer in return.
+
+var fragmentShader = `
+void main(void) {
+	highp vec4 texelColour = texture2D(uTexture0, vec2(vTextureCoords.s, vTextureCoords.t));
+
+	// Height is represented in TENTHS of a meter
+	highp float height = (
+		texelColour.r * 255.0 * 256.0 * 256.0 +
+		texelColour.g * 255.0 * 256.0 +
+		texelColour.b * 255.0 )
+	-100000.0;
+
+	if (height > 100.0) {
+		// High (>30m) over ground, transparent
+		gl_FragColor = vec4(0.5, 0.5, 0.5, 0.0);
+	} else if (height > 50.0) {
+		// Over ground but somewhat close to sea level, yellow
+		gl_FragColor = vec4(0.9, 0.9, 0.5, 0.4);
+	} else if (height > 0.0) {
+		// Over ground but very close to sea level, red
+		gl_FragColor = vec4(0.9, 0.5, 0.5, 0.4);
+	} else {
+		// Water, some semiopaque blue
+		gl_FragColor = vec4(0.05, 0.1, 0.9, 0.4);
+	}
+}
+`
+		var tileSize = 256;
+
+//Set the Map to Vancouver
+		var map = L.map('map', {
+			center: [49.2827, -123.1207],
+			zoom: 11
+		});
+
+// Access to the Basemaps
+		var mapboxAccessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
+
+//Create the Base Layer
+		var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
+			attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
+		}).addTo(map);
+
+// Call Mapbox's Terrain-RGB map layer and add it to the map
+		var antitoner = L.tileLayer.gl({
+			fragmentShader: fragmentShader,
+			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
+		}).addTo(map);
+
+		function logEvent(e) { console.log(e.type); }
+
+// LIQUEFACTION CODE //
+
+//Load the Soil Data
+var GEOJSONsoils;
+
+// load the GeoJSON data from the web
+$.getJSON ("https://raw.githubusercontent.com/mychellew/mychellew-web/master/soils.geojson"),
+function (data){
+	GEOJSONsoils = data;
+	console.log(data)};
+
+//Get the parameters needed to determine the LSN to be mapped:
+
+//Extract the depth data from the soil layer
+function getDepth(feature){
+	depth = feature.properties.depth
+};
+
+//Extract the Ev data (liquifaction susceptibility constant) from the soil data
+function getEv(feature){
+	Ev = feature.properties.Ev
+};
+
+
+// Caluclate the LSN Value using the following equations and the following parameters
+function LSN(GEOJSONsoils){
+	onEachFeaure(Math.log(feature.properties.depth + height) * feature.properties_Ev * 1000)
+};
+
+// Classify the data based on their LSN value
+function onEachSoil(feature,layer){
+	if (LSN <= 10)
+	return '#fd8b8b';
+	if (LSN <= 20)
+	return '#f93e3e';
+	if (LSN <= 30)
+	return '#a60303';
+	if (LSN <= 40)
+	return '#5e2121';
+	if (LSN <= 50)
+	return '#FF0000'
+};
+
+// Slider Code take from
+
+slider = L.control.slider(function(height) {
+	console.log(height)
+	}, {
+		position: 'bottomleft',
+		size: '250px',
+		min: 0,
+		max: 7,
+		step: 1,
+		value: 0,
+		collapsed: false,
+		title: 'Sea Level Rise Scenarios',
+		orientation: 'vertical',
+		syncSlider: true,
+	}
+).addTo(map);
+
+	</script>
+</body>
+</html>
