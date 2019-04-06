@@ -47,18 +47,12 @@ void main(void) {
 		texelColour.b * 255.0 )
 	-100000.0;
 
-	if (height > 100.0) {
+	if (height > addSLR) {
 		// High (>30m) over ground, transparent
 		gl_FragColor = vec4(0.5, 0.5, 0.5, 0.0);
-	} else if (height > 50.0) {
-		// Over ground but somewhat close to sea level, yellow
-		gl_FragColor = vec4(0.9, 0.9, 0.5, 0.4);
-	} else if (height > 0.0) {
+	} else if (height < addSLR) {
 		// Over ground but very close to sea level, red
 		gl_FragColor = vec4(0.9, 0.5, 0.5, 0.4);
-	} else {
-		// Water, some semiopaque blue
-		gl_FragColor = vec4(0.05, 0.1, 0.9, 0.4);
 	}
 }
 `
@@ -86,12 +80,13 @@ void main(void) {
 
 		function logEvent(e) { console.log(e.type); }
 
+
 // LIQUEFACTION CODE //
 
 // VARIABLES TO BE USED:
 var soilsLayer;
 var soildata;
-var height;
+var value;
 var LSN;
 
 //define the style for the soils layers
@@ -181,12 +176,16 @@ function style(feature){
 	};
 }
 
-slider = L.control.slider(height, {
+// Step Function:
+//current level of ocean water
+var x = -1;
+var addSLR = x + 1;
+
+slider = L.control.slider(addSLR, {
 		 position: 'bottomleft',
 		 size: '250px',
-		 min: 0, max: 7,
-		 value: 0,
-	   step: 1,
+		 min: 0, max: 6,
+		 value: addSLR,
 		 collapsed: false,
 		 title: 'Sea Level Rise Scenarios (m)',
 		 orientation: 'vertical',
