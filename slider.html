@@ -1,7 +1,8 @@
-<!DOCTYPE html>
-<html lang='en'>
-<meta charset="utf-8">
-<head>
+
+	<!DOCTYPE html>
+	<html lang='en'>
+	<meta charset="utf-8">
+	<head>
 	<title>Physical Vulnerability: Sea Level Rise in Vancouver, B.C.</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -13,128 +14,143 @@
 
 	<!-- External JavaScript Packages -->
 	<script src="https://mychellew.github.io/mychellew-web/Leaflet.TileLayer.GL.js"></script>
-	<script src="https://mychellew.github.io/mychellew-web/leaflet.js"></script>
 	<script src="https://mychellew.github.io/mychellew-web/leaflet-slider.js"></script>
 
-		<!-- External CSS Packages -->
-			<link rel="stylesheet" href="https://mychellew.github.io/mychellew-web/leaflet.css" />
-			<link rel="stylesheet" href="https://mychellew.github.io/mychellew-web/leaflet-slider.css"/>
+	<!-- External CSS Packages -->
+		<link rel="stylesheet" href="https://mychellew.github.io/mychellew-web/leaflet-slider.css"/>
 
-</head>
-<body>
+	</head>
+	<body>
 
 	<div id="map" style='width:100%; max-height:100%; height:600px;'></div>
 
 	<script type="text/javascript">
-
-// This script to differentiate the various RGB values from the original Mapbox Terrain-RGB
-// has been sourced from the following GitHub
-// As per request for using this code:
-
-//"THE BEER-WARE LICENSE":
-//<ivan@sanchezortega.es> wrote this file. As long as you retain this notice you
-//can do whatever you want with this stuff. If we meet some day, and you think
-//this stuff is worth it, you can buy me a beer in return.
-
-var fragmentShader = `
-void main(void) {
+	// This script to differentiate the various RGB values from the original Mapbox Terrain-RGB
+	// has been sourced from the following GitHub
+	// As per request for using this code:
+	//"THE BEER-WARE LICENSE":
+	//<ivan@sanchezortega.es> wrote this file. As long as you retain this notice you
+	//can do whatever you want with this stuff. If we meet some day, and you think
+	//this stuff is worth it, you can buy me a beer in return.
+	var fragmentShader = `
+	void main(void) {
 	highp vec4 texelColour = texture2D(uTexture0, vec2(vTextureCoords.s, vTextureCoords.t));
+	// Height refers the height of the sea level, this value is represented in TENTHS of a meter
 
-	// Height is represented in TENTHS of a meter
+	var SLR;
+
+	Code which extracts the elevation data stored in RGB layers from Mapbox's Terrain RGB layer
 	highp float height = (
-		texelColour.r * 255.0 * 256.0 * 256.0 +
-		texelColour.g * 255.0 * 256.0 +
-		texelColour.b * 255.0 )
+	texelColour.r * 255.0 * 256.0 * 256.0 +
+	texelColour.g * 255.0 * 256.0 +
+	texelColour.b * 255.0 )
 	-100000.0;
 
-	if (height > addSLR) {
-		// High (>30m) over ground, transparent
-		gl_FragColor = vec4(0.5, 0.5, 0.5, 0.0);
-	} else if (height < addSLR) {
-		// Over ground but very close to sea level, red
-		gl_FragColor = vec4(0.9, 0.5, 0.5, 0.4);
+	Conditions for Coloring based on height above sea level:
+	//Above sealevel, then area is not inundated by sea level; shaded: Transparent
+	if (height > SLR) {
+	gl_FragColor = vec4(0.5, 0.5, 0.5, 0.0);
+
+	//In the original code, this that the elvations was was about 5 cm above the sea levels
+	//   as the purpose of this map is to see which areas are more likely to be affected, onkeyup=
+	//   these areas will also be transparent
+
+} else if (height > SLR) {
+	gl_FragColor = vec4(0.5, 0.5, 0.5, 0.0);
+
+	//When the elevation of the land is less than mean sea level rise : Red
+} else if (SLR > height) {
+	gl_FragColor = vec4(0.9, 0.5, 0.5, 0.4);
+	} else {
+	// Water, some semiopaque blue
+	gl_FragColor = vec4(0.05, 0.1, 0.9, 0.4);
 	}
-}
-`
-		var tileSize = 256;
-
-//Set the Map to Vancouver
-		var map = L.map('map', {
-			center: [49.2827, -123.1207],
-			zoom: 11
-		});
-
-// Access to the Basemaps
-		var mapboxAccessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
-
-//Create the Base Layer
-		var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
-			attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
-		}).addTo(map);
-
-// Call Mapbox's Terrain-RGB map layer and add it to the map
-		var antitoner = L.gridLayer({
-			fragmentShader: fragmentShader,
-			tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
-		}).addTo(map);
-
-		function logEvent(e) { console.log(e.type); }
-
-
-// LIQUEFACTION CODE //
-
-// VARIABLES TO BE USED:
-var soilsLayer;
-var soildata;
-var value;
-var LSN;
-
-//define the style for the soils layers
-function soilStyle(feature) {
-	return {
-		fillColor: "#FF00FF",
-		fillOpacity: 1,
-    color: '#B04173',
-	};
-};
-
-// load the GeoJSON data from the web
-var soildata = $.getJSON ("https://mychellew.github.io/mychellew-web/soils.geojson",
-function (soildata){
-});
-
-map.on('load', function (){
-	map.addLayer({
-		'id': 'soildata',
-		'source':{
-			'type': 'geojson',
-			'data': soildata
+	}
+	`
+	// void main(void) {
+	// 	highp vec4 texelColour = texture2D(uTexture0, vec2(vTextureCoords.s, vTextureCoords.t));
+	// 	// Height is represented in TENTHS of a meter
+	// 	highp float height = (
+	// 		texelColour.r * 255.0 * 256.0 * 256.0 +
+	// 		texelColour.g * 255.0 * 256.0 +
+	// 		texelColour.b * 255.0 )
+	// 	-100000.0;
+	// 	if (height > addSLR) {
+	// 		// High (>30m) over ground, transparent
+	// 		gl_FragColor = vec4(0.5, 0.5, 0.5, 0.0);
+	// 	} else if (height < addSLR) {
+	// 		// Over ground but very close to sea level, red
+	// 		gl_FragColor = vec4(0.9, 0.5, 0.5, 0.4);
+	// 	}
+	// }
+	var tileSize = 256;
+	//Set the Map to Vancouver
+	var map = L.map('map', {
+		center: [49.2827, -123.1207],
+		zoom: 11
+	});
+	// Access to the Basemaps
+	var mapboxAccessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
+	//Create the Base Layer
+	var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
+		attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
+	}).addTo(map);
+	// Call Mapbox's Terrain-RGB map layer and add it to the map
+	var antitoner = L.tileLayer.gl({
+		uniforms: {
+			SLR: Number(document.getElementbyId('SLRslider').value)
 		},
-		'type': 'polygon'
-	})});
+		fragmentShader: fragmentShader,
+		tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
+	}).addTo(map);
 
+	// function logEvent(e) { console.log(e.type); }
+	// LIQUEFACTION CODE //
+	// VARIABLES TO BE USED:
+	var soilsLayer;
+	var soildata;
+	var value;
+	var LSN;
+
+	//define the style for the soils layers
+	function soilStyle(feature) {
+	return {
+	fillColor: "#FF00FF",
+	fillOpacity: 1,
+	color: '#B04173',
+	};
+	};
+	// load the GeoJSON data from the web
+	// var soildata = $.getJSON ("https://mychellew.github.io/mychellew-web/soils.geojson",
+	// function (soildata){
+	// });
+	//
+	// map.on('load', function (){
+	// 	map.addLayer({
+	// 		'id': 'soildata',
+	// 		'source':{
+	// 			'type': 'geojson',
+	// 			'data': soildata
+	// 		},
+	// 		'type': 'polygon'
+	// 	})});
 	//Load the Soil Data
- //soilLayer = L.geoJSON(GEOJSONsoil).addTo(map);
-
-//Get the parameters needed to determine the LSN to be mapped:
-
-//Extract the depth data from the soil layer
-function getDepth(feature){
+	// soilLayer = L.geoJSON(GEOJSONsoil).addTo(map);
+	//Get the parameters needed to determine the LSN to be mapped:
+	//Extract the depth data from the soil layer
+	function getDepth(feature){
 	depth = feature.properties.depth
-};
-
-//Extract the Ev data (liquifaction susceptibility constant) from the soil data
-function getEv(feature){
+	};
+	//Extract the Ev data (liquifaction susceptibility constant) from the soil data
+	function getEv(feature){
 	Ev = feature.properties.Ev
-};
-
-// Caluclate the LSN Value using the following equations and the following parameters
-function LSN(GEOJSONsoil){
-	onEachFeaure(Math.log(feature.properties.depth + height) * feature.properties_Ev * 1000)
-};
-
-// Classify the data based on their LSN value
-function onEachSoil(LSN){
+	};
+	// Caluclate the LSN Value using the following equations and the following parameters
+	function LSN(GEOJSONsoil){
+	onEachFeaure(Math.log(feature.properties.depth + SLR) * (feature.properties_Ev/100) * 1000)
+	};
+	// Classify the data based on their LSN value
+	function onEachSoil(LSN){
 	// This is the class that will experience no or little land damage
 	if (LSN <= 10)
 	return '#fd8b8b';
@@ -150,50 +166,46 @@ function onEachSoil(LSN){
 	// Severe Damage
 	if ((LSN > 10) && (LSN <= 50))
 	return '#FF0000'
-};
-
-//code that may be helpful from leaflet
-// function getColor(LSN) {
-//     return LSN < 10 ? '#800026' :
-//            LSN < 20 ? '#BD0026' :
-//            LSN < 30 ? '#E31A1C' :
-//            LSN < 40  ? '#FC4E2A' :
-//            LSN < 50   ? '#FD8D3C' :
-//            LSN > 50   ? '#FEB24C' :
-//                       '#FFEDA0';
-// }
-
-// Slider Code take from Eclipse1979: https://github.com/Eclipse1979/leaflet-slider
-
-function style(feature){
-	return{
-		fillColor: onEachSoil(feature, layer),
-		weight: 1,
-		opacity: 0.85,
-		color: 'black',
-		dashArray: '3',
-		fillOpacity: 0.65
 	};
-}
+	//code that may be helpful from leaflet
+	// function getColor(LSN) {
+	//     return LSN < 10 ? '#800026' :
+	//            LSN < 20 ? '#BD0026' :
+	//            LSN < 30 ? '#E31A1C' :
+	//            LSN < 40  ? '#FC4E2A' :
+	//            LSN < 50   ? '#FD8D3C' :
+	//            LSN > 50   ? '#FEB24C' :
+	//                       '#FFEDA0';
+	// }
+	// Slider Code take from Eclipse1979: https://github.com/Eclipse1979/leaflet-slider
+	// function style(feature){
+	// 	return{
+	// 		fillColor: onEachSoil(feature, layer),
+	// 		weight: 1,
+	// 		opacity: 0.85,
+	// 		color: 'black',
+	// 		dashArray: '3',
+	// 		fillOpacity: 0.65
+	// 	};
+	// }
+	// var addSLR = 0;
+	// 	slider = L.control.slider(SLR, {
+	//  	position: 'bottomleft',
+	//  	size: '250px',
+	//  	min: 0, max: 6,
+	//  	value: addSLR,
+	//  	collapsed: false,
+	//  	title: 'Sea Level Rise Scenarios (m)',
+	//  	orientation: 'vertical',
+	//  	syncSlider: true,
+	// }).addTo(map);
 
-// Step Function:
-//current level of ocean water
-var x = -1;
-var addSLR = x + 1;
+	L.DomEvent.on(document.getElementById('SLRslider'), 'change input', function(ev) {
+			antitoner.setUniform('SLR', ev.target.value);
+			antitoner.reRender();
+		});
 
-slider = L.control.slider(addSLR, {
-		 position: 'bottomleft',
-		 size: '250px',
-		 min: 0, max: 6,
-		 value: addSLR,
-		 collapsed: false,
-		 title: 'Sea Level Rise Scenarios (m)',
-		 orientation: 'vertical',
-		 syncSlider: true,
-	}).addTo(map);
-
-// Code for Legend
-
+	// Code for Legend
 	</script>
-</body>
-</html>
+	</body>
+	</html>
