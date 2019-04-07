@@ -1,6 +1,6 @@
 L.Control.Slider = L.Control.extend({
-    update: function(addSLR){
-        return addSLR;
+    update: function(value){
+        return SLR;
     },
 
     options: {
@@ -16,10 +16,10 @@ L.Control.Slider = L.Control.extend({
         logo: 'S',
         orientation: 'horizontal',
         increment: false,
-        getaddSLR: function(addSLR) {
-            return addSLR;
+        getValue: function(SLR) {
+            return SLR;
         },
-        showaddSLR: true,
+        showValue: true,
         syncSlider: false
     },
     initialize: function (f, options) {
@@ -27,13 +27,13 @@ L.Control.Slider = L.Control.extend({
         if (typeof f == "function") {
             this.update = f;
         } else {
-            this.update = function (addSLR) {
-                console.log(addSLR);
+            this.update = function (SLR) {
+                console.log(SLR);
             };
         }
-        if (typeof this.options.getaddSLR != "function") {
-            this.options.getaddSLR = function (addSLR) {
-                return addSLR;
+        if (typeof this.options.getValue != "function") {
+            this.options.getValue = function (SLR) {
+                return SLR;
             };
         }
         if (this.options.orientation!='vertical') {
@@ -42,15 +42,15 @@ L.Control.Slider = L.Control.extend({
     },
     onAdd: function (map) {
         this._initLayout();
-        this.update(this.options.addSLR+"");
+        this.update(this.options.value+"");
         return this._container;
     },
-    _updateaddSLR: function () {
-        this.addSLR = this.slider.addSLR;
-        if (this.options.showaddSLR){
-    	   this._slideraddSLR.innerHTML = this.options.getaddSLR(this.addSLR);
+    _updateValue: function () {
+        this.value = this.slider.value;
+        if (this.options.showValue){
+    	   this._sliderValue.innerHTML = this.options.getValue(this.value);
         }
-        this.update(this.addSLR);
+        this.update(this.value);
     },
     _initLayout: function () {
         var className = 'leaflet-control-slider';
@@ -59,9 +59,9 @@ L.Control.Slider = L.Control.extend({
         this._sliderLink.setAttribute("title", this.options.title);
         this._sliderLink.innerHTML = this.options.logo;
 
-        if (this.options.showaddSLR){
-            this._slideraddSLR = L.DomUtil.create('p', className+'-addSLR', this._container);
-            this._slideraddSLR.innerHTML = this.options.getaddSLR(this.options.addSLR);
+        if (this.options.showValue){
+            this._sliderValue = L.DomUtil.create('p', className+'-SLR', this._container);
+            this._sliderValue.innerHTML = this.options.getValue(this.options.value);
         }
 
         if(this.options.increment) {
@@ -80,14 +80,14 @@ L.Control.Slider = L.Control.extend({
         this.slider.setAttribute("min", this.options.min);
         this.slider.setAttribute("max", this.options.max);
         this.slider.setAttribute("step", this.options.step);
-        this.slider.setAttribute("addSLR", this.options.addSLR);
+        this.slider.setAttribute("value", this.options.value);
         if (this.options.syncSlider) {
             L.DomEvent.on(this.slider, "input", function (e) {
-                this._updateaddSLR();
+                this._updateValue();
             }, this);
         } else {
             L.DomEvent.on(this.slider, "change", function (e) {
-                this._updateaddSLR();
+                this._updateValue();
             }, this);
         }
 
@@ -97,7 +97,7 @@ L.Control.Slider = L.Control.extend({
             L.DomEvent.on(this._minus, 'click', this._decrement, this);
         }
 
-        if (this.options.showaddSLR){
+        if (this.options.showValue){
             if (window.matchMedia("screen and (-webkit-min-device-pixel-ratio:0)").matches && this.options.orientation =='vertical') {this.slider.style.width = (this.options.size.replace('px','') -36) +'px'; this._sliderContainer.style.height = (this.options.size.replace('px','') -36) +'px';}
             else if (this.options.orientation =='vertical') {this._sliderContainer.style.height = (this.options.size.replace('px','') -36) +'px';}
             else {this._sliderContainer.style.width = (this.options.size.replace('px','') -56) +'px';}
@@ -134,14 +134,14 @@ L.Control.Slider = L.Control.extend({
         L.DomUtil.removeClass(this._container, 'leaflet-control-slider-expanded');
     },
     _increment: function () {
-        console.log(this.slider.addSLR-this.slider.step + " " + this.slider.addSLR+this.slider.step);
-        this.slider.addSLR = this.slider.addSLR*1+this.slider.step*1;
-        this._updateaddSLR();
+        console.log(this.slider.value-this.slider.step + " " + this.slider.value+this.slider.step);
+        this.slider.value = this.slider.value*1+this.slider.step*1;
+        this._updateValue();
     },
     _decrement: function () {
-        console.log(this.slider.addSLR-this.slider.step + " " + this.slider.addSLR+this.slider.step);
-        this.slider.addSLR = this.slider.addSLR*1-this.slider.step*1;
-        this._updateaddSLR();
+        console.log(this.slider.value-this.slider.step + " " + this.slider.value+this.slider.step);
+        this.slider.value = this.slider.value*1-this.slider.step*1;
+        this._updateSLR();
     }
 
 
