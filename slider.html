@@ -94,11 +94,13 @@
 	var data;
 	var soildata;
 	var lSN;
+	var depth;
+	var constantLSN;
 
 	//Styleing rules for the soils layers
 	function soilStyle(feature) {
 		return {
-			fillColor: colorLSN(data),
+			fillColor: colorLSN(calculateLSN(soildata)),
 			weight: 1,
 			Opacity: 0.85,
 			fillOpacity: 0.7
@@ -116,20 +118,20 @@
 
 // Determine the factors used to calculate lSN: depth that can be liquefied
 	// Depth is in meters
-	function getDepth(data) {
-		onEachFeature (feature.properties.depth + slrValue)
+	function getDepth(soildata) {
+		var depth = feature.properties.depth + slrValue
 	};
 
 // Determine the factors used to calculate lSN: liquefaction susceptibility
 // Note that Ev is divided by 1000 as the data could not store decimals when exported from ArcMap
 // The ev value should be in a fraction and represents the liquefaction susceptibility Number
-	function getLSNconstant(data) {
-		onEachFeature (feature.properties.liequeev/1000)
+	function getLSNconstant(soildata) {
+		var constantLSN = (feature.properties.liequeev/1000)
 	};
 
 	// Caluclate the LSN Value using the following equations and the following parameters
-	 function calculateLSN(data){
-	 lSN = onEachFeaure(Math.log(getDepth) * getLSNconstant * 1000)
+	 function calculateLSN(soildata){
+	 var lSN = Math.log(depth) * constantLSN * 1000
 	 };
 
 	// function onEachSoil(LSN){
@@ -147,7 +149,7 @@
 	// };
 
 	// Classify the data based on their LSN value
-	 function colorLSN(lSN) {
+	 function colorLSN(soildata) {
 		 return
 		 // Severe Damage
 	            (lSN > 50) ? '#800026' :
