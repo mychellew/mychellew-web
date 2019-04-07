@@ -98,7 +98,7 @@
 	// Call Mapbox's Terrain-RGB map layer and add it to the map
 	var antitoner = L.tileLayer.gl({
 		uniforms: {
-			SLR: Number(document.getElementbyId('SLRslider').value)
+			SLR: Number(document.getElementById('SLRslider').value)
 		},
 		fragmentShader: fragmentShader,
 		tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
