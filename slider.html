@@ -99,41 +99,45 @@ var soilsData
 
 console.log(soilsData)
 
-//Styleing rules for the soils layers
-function soilStyle(feature, layer) {
-  return {
-    fillColor: colorLSN(soilsData),
-    weight: 1,
-    Opacity: 1,
-    fillOpacity: 1
-  };
-}
+//Styling rules for the soils layers
+ function soilStyle(feature, layer) {
+   return {
+     fillColor: colorLSN(soilsData),
+     weight: 1,
+     Opacity: 1,
+     fillOpacity: 1
+   };
+ }
 
 //Add the style to the geoJson layer:
 var soilGeojson = L.geoJson(soilsData, {
   style: soilStyle,
-//  onEachFeature: OnEachSoil
 }).addTo(map);
 
-function getDepth(soilsData, {
-  Math.log(features.properties.depth + slrValue)
-});
-
-function getLSNconstant(soilsData, {
-  features.properties.liqueev/1000
-});
-
-// Classify the data based on their LSN value
- function colorLSN(soilsData) {
-   const lSN = getDepth * getLSNconstant * 1000
-   };
-   return   lSN > 50 ? '#800026' :  // Severe Damage
-            lSN > 40 ? '#BD0026' :  // Medium Damage
-            lSN > 30 ? '#E31A1C' :  // Moderate to Medium Damage
-            lSN > 20 ? '#FC4E2A' :  // Light to Moderate
-            lSN < 10 ? '#FFEDA0' :  // This is the class that will experience no or little land damage
-                       '#FFFFFF';   // No associated LSN value, produce this color
+ function getDepth(feature, layer) {
+    if (feature.properties && feature.properties.depth) {
+      Math.log(feature.properties.depth + slrValue)
+    }
+};
+//
+ function getLSNconstant(feature, layer) {
+    if (feature.properties && feature.properties.liqueev) {
+      feature.properties.liqueev/1000
+    }
   };
+//
+
+var lSN = getDepth(soilsData) * getLSNconstant(soilsData) * 1000;
+
+ // Classify the data based on their LSN value
+  function colorLSN(soilsData) {
+    return   lSN > 50 ? '#800026' :  // Severe Damage
+             lSN > 40 ? '#BD0026' :  // Medium Damage
+             lSN > 30 ? '#E31A1C' :  // Moderate to Medium Damage
+             lSN > 20 ? '#FC4E2A' :  // Light to Moderate
+             lSN < 10 ? '#FFEDA0' :  // This is the class that will experience no or little land damage
+                        '#FFFFFF';   // No associated LSN value, produce this color
+   };
 
 // Determine the factors used to calculate lSN: depth that can be liquefied
 // Depth is in meters
@@ -147,38 +151,13 @@ function getLSNconstant(soilsData, {
 // Caluclate the LSN Value using the following equations and the following parameters
 
 
-//function lSN(soil, {
-//   Math.log(feature.properties.depth) * feature.properties.liqueev/1000 * 1000
-// };
-//  console.log(lSN)
-// Code for Legend
-// var legend = L.control({position:'bottomright'}),
-// addLegend = function (map) {
-// 	var div = L.DomUtil.create('div', 'Liquefaction Severity Index'),
-// 		grades = [10, 20, 30, 40, 50],
-// 		labels = ["0-10", "10-20", "20-30","40-50","50+"];
-// 		// loop through our density intervals and generate a label with a colored square for each interval
-//   for (var i = 0; i < grades.length; i++) {
-//       div.innerHTML +=
-//           '<i style="background:' + soilStyle(grades[i] + 1) + '"></i> ' +
-//           grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-//   }
-//   return div;
-// };
-//
-// legend.addTo(map);
 //Create Toggable layers
-// Layer 1: Looking at Sea Level Rise Scenarios
-// var onlySLR = L.layerGroup([antitoner]);
-//Layer 2: Looking at Liquefaction Severity Number and Sea Level Rise
-// var liquefaction = L.layerGroup()
-// Add these layers into the Map
-// L.control.layers(onlySLR, liquefaction).addTo(map);
-//Sylization of the Toggle Menu
-// var toggleLayers = {
-// 	"<span style=' color: gray'>Sea Level Rise Scenarios</span>": onlySLR,
-// 	"Liquefaction Severity Number": liquefaction
-// };
+
+
+// Code for Legend
+
+
+
 //Slider code was also modiefied from Iván Sánchez Ortega's sliders demo code:
 // Repo is available from here: https://gitlab.com/IvanSanchez/Leaflet.TileLayer.GL/blob/master/demo/demo-sliders.html
 L.DomEvent.on(document.getElementById('add-slr'), 'change input', function(ev) {
