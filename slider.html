@@ -51,7 +51,7 @@
 <div>Sea Level Rise: <input id='addslr' type='range' min=0 max=60 step=0.1 style='width: 20em'/>
 +<span id="output"></span>dm
 </div>
-<p>Please se the Menu in the top right-hand corner to explore different physical vulnerabilities.</p>
+<p>Please use the Menu in the top right-hand corner to explore different physical vulnerabilities.</p>
 <p>Note:
   (1) 10 dm = 1m of Sea Level Rise;
   (2) Values displayed are estimates based on literature research.</p>
@@ -89,8 +89,8 @@ void main(void) {
 var tileSize = 256;
 //Set the Map to Vancouver
 var map = L.map('map', {
-  center:  [49.2435, -123.11428],
-  zoom: 11,
+  center:  [49.247869, -123.079989],
+  zoom: 11.5,
   //layers: [onlySLR, liquefaction]
 });
 // Access to the Basemaps
@@ -120,9 +120,9 @@ var soilsData
  function soilStyle(feature) {
    return {
      fillColor: colorLSN(feature.properties),
-     weight: 0.3,
-     opacity: 0.3,
-     fillOpacity: 0.3
+     weight: 0.45,
+     opacity: 0.45,
+     fillOpacity: 0.45
    };
  }
 //Add the style to the geoJson layer:
