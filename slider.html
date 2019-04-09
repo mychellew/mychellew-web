@@ -83,7 +83,7 @@ var tileSize = 256;
 //Set the Map to Vancouver
 var map = L.map('map', {
   center:  [49.2435, -123.11428],
-  zoom: 13
+  zoom: 12
 });
 // Access to the Basemaps
 var mapboxAccessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
@@ -104,8 +104,8 @@ var antitoner = L.tileLayer.gl({
 // LIQUEFACTION CODE //
 // GLOBAL VARIABLES TO BE USED:
 var slrValue; //Slider value
+var soilsData;
 
-var soilsData
 console.log(soilsData)
 
 //Styling rules for the soils layers
@@ -117,11 +117,12 @@ console.log(soilsData)
      fillOpacity: 1
    };
  }
-//Add the style to the geoJson layer:
+
+//Create the GeoJson Layer
 var soilGeojson = L.geoJson(soilsData, {
   style: soilStyle,
 }).addTo(map);
-// Manually load the GeoJSON
+
 // Determine the factors used to calculate lSN: depth that can be liquefied
 // Depth is in meters
 // Determine the factors used to calculate lSN: liquefaction susceptibility
@@ -130,11 +131,19 @@ var soilGeojson = L.geoJson(soilsData, {
 // var constantLSN = feature.properties.liqueev / 1000
 // console.log(constantLSN)
 // Caluclate the LSN Value using the following equations and the following parameters
-function lSN (soilGeojson) {
-   Math.log(feature.properties.depth + slrValue) * feature.properties.liqueev/1000 * 1000
-};
+function getDepth(soilsData)
+{onEachSoil(Math.log(feature.properties.depth + slrValue))};
+
+function getLSNconstant (soilsData)
+{onEachSoil(feature.properties.liqueev/1000)};
+
+function lSN (getDepth, getLSNconstant)
+{onEachSoil(getDepth * getLSNconstant * 1000)};
+console.log(lSN);
+
  // Classify the data based on their LSN value
   function colorLSN(lSN) {
+    console.log(lSN)
     return   lSN > 50 ? '#b30000' :  // Severe Damage
              lSN > 40 ? '#e34a33' :  // Medium Damage
              lSN > 30 ? '#fc8d59' :  // Moderate to Medium Damage
@@ -142,7 +151,6 @@ function lSN (soilGeojson) {
              lSN > 10 ? '#fdd49e' :  // No or little land damage
                         '#fef0d9';   // No damaged or associated LSN value, produce this color
    };
-
 // Code for Legend
 
 var legend = L.control({position:'bottomright'});
@@ -151,7 +159,7 @@ legend.onAdd = function (map) {
    grades = [0, 10, 20, 30, 40, 50],
    labels = [];
    // loop through our density intervals and generate a label with a colored square for each interval
-  div.innerHTML = '<div><b>Liquid Severity Index</b></div>';
+  div.innerHTML = '<div><b>Liquefaction Severity Index</b></div>';
   for (var i = 0; i < grades.length; i++) {
       div.innerHTML +=
           '<i style="background:' + colorLSN(grades[i] + 1) + '"></i> ' +
@@ -161,22 +169,7 @@ legend.onAdd = function (map) {
 };
 legend.addTo(map);
 
-//Toggle Layers
-// Layer 1: Looking at Sea Level Rise Scenarios
-//  var onlySLR = L.layerGroup([antitoner]);
-//  onlySLR.addTo(map);
-// //Layer 2: Looking at Liquefaction Severity Number and Sea Level Rise
-//  var liquefaction = L.layerGroup([soilGeojson, legend]);
-//  liquefaction.addTo(map);
-//
-// Add these layers into the Map
-//  L.control.layers(onlySLR, liquefaction).addTo(map);
-//
-// //Sylization of the Toggle Menu
-//  var toggleLayers = {
-  	"<span style=' color: gray'>Sea Level Rise Scenarios</span>": onlySLR,
-  	"Liquefaction Severity Number": liquefaction
-  };
+
 //Slider code was also modiefied from Iván Sánchez Ortega's sliders demo code:
 // Repo is available from here: https://gitlab.com/IvanSanchez/Leaflet.TileLayer.GL/blob/master/demo/demo-sliders.html
 L.DomEvent.on(document.getElementById('add-slr'), 'change input', function(ev) {
