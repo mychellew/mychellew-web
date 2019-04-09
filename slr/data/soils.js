@@ -654,7 +654,7 @@ var soilsData =
         SOIL_TYPE: 'SiltandClay',
         SHAPE_Length: 0.037211000070641084,
         SHAPE_Area: 0.000017298570170604767,
-        depth: 15,
+        depth: 8,
         liqueev: 20
       },
       id: 6
@@ -2294,7 +2294,7 @@ var soilsData =
       },
       properties: {
         OBJECTID: 28,
-        SOIL_TYPE: 'Peat',
+        SOIL_TYPE: 'SiltandClay',
         SHAPE_Length: 0.16150253638885903,
         SHAPE_Area: 0.00039523056475186647,
         depth: 8,
@@ -2446,8 +2446,8 @@ var soilsData =
         SOIL_TYPE: 'SiltandClay',
         SHAPE_Length: 0.020997536008326156,
         SHAPE_Area: 0.000012041053198158827,
-        depth: 65,
-        liqueev: 40
+        depth: 8,
+        liqueev: 20
       },
       id: 26
     },
@@ -2501,8 +2501,8 @@ var soilsData =
         SOIL_TYPE: 'SiltandClay',
         SHAPE_Length: 0.006231224537834819,
         SHAPE_Area: 0.0000028286517081222182,
-        depth: 65,
-        liqueev: 40
+        depth: 8,
+        liqueev: 20
       },
       id: 27
     },
@@ -4307,7 +4307,7 @@ var soilsData =
       },
       properties: {
         OBJECTID: 49,
-        SOIL_TYPE: 'Peat',
+        SOIL_TYPE: 'SiltandClay',
         SHAPE_Length: 0.21652577250394622,
         SHAPE_Area: 0.00030928985555354817,
         depth: 8,
@@ -5008,8 +5008,8 @@ var soilsData =
         SOIL_TYPE: 'SiltandClay',
         SHAPE_Length: 0.017399263485084256,
         SHAPE_Area: 0.00001150770227982564,
-        depth: 15,
-        liqueev: 40
+        depth: 8,
+        liqueev: 20
       },
       id: 48
     },
