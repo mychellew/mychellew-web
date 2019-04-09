@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang='en'>
+<meta charset="utf-8">
+<head>
+<title>Physical Vulnerability: Sea Level Rise in Vancouver, B.C.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Mapping Packages -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+<!-- jQuery is a library that simplifies many things in JavaScript. Used to retrieve data from the web. -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<!-- External JavaScript Packages -->
+<script src="https://mychellew.github.io/mychellew-web/Leaflet.TileLayer.GL.js"></script>
+<script type="text/javascript" src="https://mychellew.github.io/mychellew-web/slr/data/soils.js"></script>
+<!--<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>-->
+
+<!-- External CSS Packages -->
+
+<style>
+ .legend {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+  }
+  .legend {
+  background-color: “white”;
+  line-height: 25px;
+  color: #555;
+  width: auto;
+  }
+  .legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
+  }
+
+  </style>
+
+  </head>
+  <body>
+
+<div id="map" style='width:100%; max-height:100%; height:680px;'></div>
+
+<div>Sea Level Rise: <input id='add-slr' type='range' min=0 max=60 step=0.1 style='width: 20em'/>
++<span id="output"></span>dm
+</div>
+<p>Please use the Menu in the top right-hand corner to explore different physical vulnerabilities.</p>
+<p>Note:(1) 10 dm = 1m of Sea Level Rise; (2) Values displayed are estimates based on literature research.</p>
+
+
+<script type="text/javascript">
+// This script to differentiate the various RGB values from the original Mapbox Terrain-RGB
+// has been sourced from the following GitHub
+// The Mapbox Terrain RGB layers stores elevation data in the form of RGB values
+// As per request for using this code:
+//"THE BEER-WARE LICENSE":
+//<ivan@sanchezortega.es> wrote this file. As long as you retain this notice you
+//can do whatever you want with this stuff. If we meet some day, and you think
+//this stuff is worth it, you can buy me a beer in return.
+var fragmentShader =
+`
+void main(void) {
+  highp vec4 texelColour = texture2D(uTexture0, vec2(vTextureCoords.s, vTextureCoords.t));
+  // Height is represented in TENTHS of a meter
+  highp float height = (
+    texelColour.r * 255.0 * 256.0 * 256.0 +
+    texelColour.g * 255.0 * 256.0 +
+    texelColour.b * 255.0 )
+  -100000.0;
+  if (height > slrValue) {
+    // Height > sea level, transparent
+    gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);
+  } else {
+    // Water, some semiopaque blue
+    gl_FragColor = vec4(0.05, 0.1, 0.9, 1.0);
+  }
+}
+`
+// Raster Tile Size
+var tileSize = 256;
+//Set the Map to Vancouver
+var map = L.map('map', {
+  center:  [49.247869, -123.079989],
+  zoom: 11.5,
+
+});
+// Access to the Basemaps
+var mapboxAccessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
+//Create the Base Layer
+var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
+  attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
+}).addTo(map);
+// Call Mapbox's Terrain-RGB map layer and add it to the map
+var antitoner = L.tileLayer.gl({
+  uniforms: {
+    slrValue: Number(document.getElementById('add-slr').value)
+  },
+  fragmentShader: fragmentShader,
+  opacity: 0.5,
+  tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
+}).addTo(map);
+
+// LIQUEFACTION CODE //
+// GLOBAL VARIABLES TO BE USED:
+
+// KIYOMi set this to be the beginning slider val.
+var slrValue = 60/2; //Slider value
+var soilsData
+
+//Styling rules for the soils layers
+ function soilStyle(feature) {
+   return {
+     fillColor: colorLSN(feature.properties),
+     weight: 0.3,
+     opacity: 0.45,
+     fillOpacity: 0.45
+   };
+ }
+//Add the style to the geoJson layer:
+var soilGeojson = L.geoJson(soilsData, {
+  style: soilStyle,
+}).addTo(map);
+
+// Caluclate the LSN Value using the following equations and the following parameters
+ // KIYOMI: removed a bunch of stuff, you shouldnt pass LSN around that is a function.
+ // instead, put this calculation inside.
+
+ //Useful code: var slrValue = document.getElementById("add-slr").addEventListener(slrValue, featureLSN).value;
+  function colorLSN(props) {
+    // Determine the factors used to calculate slr value is /10 because the height data is in decimeters.
+    var slrValue = (document.getElementById("add-slr").addEventListener('change input', function(ev){
+      
+    }
+    let featureLSN = Math.log(props.depth + (slrValue/10)) * (props.liqueev/1000) * 1000
+  //  console.log(featureLSN);
+    return   featureLSN > 50 ? '#b30000' :  // Severe Damage
+             featureLSN > 40 ? '#e34a33' :  // Medium Damage
+             featureLSN > 30 ? '#fc8d59' :  // Moderate to Medium Damage
+             featureLSN > 20 ? '#fdbb84' :  // Light to Moderate
+             featureLSN > 10 ? '#fdd49e' :  // No or little land damage
+                        '#fef0d9';   // No damaged or associated LSN value, produce this color
+   };
+   // add for legend
+   function legendColours(props) {
+     return   props > 50 ? '#b30000' :  // Severe Damage
+              props > 40 ? '#e34a33' :  // Medium Damage
+              props > 30 ? '#fc8d59' :  // Moderate to Medium Damage
+              props > 20 ? '#fdbb84' :  // Light to Moderate
+              props > 10 ? '#fdd49e' :  // No or little land damage
+                           '#fef0d9';   // No damaged or associated LSN value, produce this color
+    };
+
+// Code for Legend box
+var legend = L.control({position:'bottomright'});
+legend.onAdd = function (map) {
+ var div = L.DomUtil.create('div', 'legend'),
+   grades = [0, 10, 20, 30, 40, 50],
+   labels = [];
+   // loop through our density intervals and generate a label with a colored square for each interval
+  div.innerHTML = '<div><b>Liquefaction Severity Index</b></div>';
+  for (var i = 0; i < grades.length; i++) {
+      div.innerHTML +=
+          '<i style="background:' + legendColours(grades[i] + 1) + '"></i> ' +
+          grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+  }
+  return div;
+};
+legend.addTo(map);
+
+//Togglable Layers
+var onlySLR = L.layerGroup([antitoner]);
+var liquefaction = L.layerGroup([soilGeojson]);
+
+// Layers to Toggle between
+var baseMaps = {
+  "Sea Level Rise Scenarios": onlySLR,
+  "Liquefaction": liquefaction
+};
+
+// Add controls to Map
+L.control.layers(baseMaps).addTo(map);
+
+// Toggle Menu
+var baseMaps = {
+    "<span style='color: gray'>Sea Level Rise Scenarios</span>": onlySLR,
+    "Liquefaction": liquefaction
+};
+
+//Slider code was also modified from Iván Sánchez Ortega's sliders demo code:
+// Repo is available from here: https://gitlab.com/IvanSanchez/Leaflet.TileLayer.GL/blob/master/demo/demo-sliders.html
+L.DomEvent.on(document.getElementById('add-slr'), 'change input', function(ev) {
+  // KIYOMI: update your SLR value
+  slrValue = ev.target.value;
+  antitoner.setUniform('slrValue', ev.target.value);
+  antitoner.reRender();
+});
+
+//This code here tracks how much the sea level has increased by
+var control = document.getElementById('add-slr');
+      var output = document.getElementById('output');
+      control.addEventListener('input', function() {
+        output.innerText = control.value;
+      });
+      output.innerText = control.value;
+
+	</script>
+</body>
+</html>
