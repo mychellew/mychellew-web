@@ -134,10 +134,7 @@ var soilGeojson = L.geoJson(soilsData, {
 
  //Useful code: var slrValue = document.getElementById("add-slr").addEventListener(slrValue, featureLSN).value;
   function colorLSN(props) {
-    // Determine the factors used to calculate slr value is /10 because the height data is in decimeters.
-    var slrValue = (document.getElementById("add-slr").addEventListener('change input', function(ev){
-      
-    }
+    // Determine the factors used to calculate slr value is /10 because the height data is in decimeters
     let featureLSN = Math.log(props.depth + (slrValue/10)) * (props.liqueev/1000) * 1000
   //  console.log(featureLSN);
     return   featureLSN > 50 ? '#b30000' :  // Severe Damage
@@ -147,6 +144,23 @@ var soilGeojson = L.geoJson(soilsData, {
              featureLSN > 10 ? '#fdd49e' :  // No or little land damage
                         '#fef0d9';   // No damaged or associated LSN value, produce this color
    };
+
+   var slrValue;
+
+   L.DomEvent.on(document.getElementById('add-slr'), 'change input', function(ev) {
+     // KIYOMI: update your SLR value
+     slrValue = ev.target.value;
+     map.removeLayer(soilGeojson);
+     soilGeojson = L.geoJson(soilsData,
+       {style: soilStyle,
+       });
+       soilGeojson.addTo(map)
+   });
+
+   var slrValue = document.addEventListener('change input', function() {
+
+       });
+
    // add for legend
    function legendColours(props) {
      return   props > 50 ? '#b30000' :  // Severe Damage
@@ -156,6 +170,11 @@ var soilGeojson = L.geoJson(soilsData, {
               props > 10 ? '#fdd49e' :  // No or little land damage
                            '#fef0d9';   // No damaged or associated LSN value, produce this color
     };
+
+//Update the Liquefaction Layer when there has been a change in slr
+// Track the last layer
+ // Lastlayer added
+
 
 // Code for Legend box
 var legend = L.control({position:'bottomright'});
