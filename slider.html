@@ -46,15 +46,13 @@
   </head>
   <body>
 
-<div id="map" style='width:100%; max-height:100%; height:700px;'></div>
+<div id="map" style='width:100%; max-height:100%; height:680px;'></div>
 
-<div>Sea Level Rise: <input id='addslr' type='range' min=0 max=60 step=0.1 style='width: 20em'/>
+<div>Sea Level Rise: <input id='add-slr' type='range' min=0 max=60 step=0.1 style='width: 20em'/>
 +<span id="output"></span>dm
 </div>
 <p>Please use the Menu in the top right-hand corner to explore different physical vulnerabilities.</p>
-<p>Note:
-  (1) 10 dm = 1m of Sea Level Rise;
-  (2) Values displayed are estimates based on literature research.</p>
+<p>Note:(1) 10 dm = 1m of Sea Level Rise; (2) Values displayed are estimates based on literature research.</p>
 
 
 <script type="text/javascript">
@@ -91,18 +89,18 @@ var tileSize = 256;
 var map = L.map('map', {
   center:  [49.247869, -123.079989],
   zoom: 11.5,
-  //layers: [onlySLR, liquefaction]
+
 });
 // Access to the Basemaps
 var mapboxAccessToken = 'pk.eyJ1IjoibXljaGUxMWV3IiwiYSI6ImNqcnNkN3hocDFvazk0M3JvdWtya2YyYXkifQ.YaXS3C0R0dBAkDinTx1z8w';
 //Create the Base Layer
-var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
+var base = L.tileLayer("https://{s}.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=" + mapboxAccessToken, {
   attribution: 'Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;<a href="https://www.mapbox.com/map-feedback/">Mapbox</a>'
 }).addTo(map);
 // Call Mapbox's Terrain-RGB map layer and add it to the map
 var antitoner = L.tileLayer.gl({
   uniforms: {
-    slrValue: Number(document.getElementById('addslr').value)
+    slrValue: Number(document.getElementById('add-slr').value)
   },
   fragmentShader: fragmentShader,
   opacity: 0.5,
@@ -120,7 +118,7 @@ var soilsData
  function soilStyle(feature) {
    return {
      fillColor: colorLSN(feature.properties),
-     weight: 0.45,
+     weight: 0.3,
      opacity: 0.45,
      fillOpacity: 0.45
    };
@@ -130,18 +128,13 @@ var soilGeojson = L.geoJson(soilsData, {
   style: soilStyle,
 }).addTo(map);
 
-// Determine the factors used to calculate lSN: depth that can be liquefied
-// Depth is in meters
-// lSN: liquefaction susceptibility
-// Note that Ev is divided by 1000 as the data could not store decimals when exported from ArcMap
-// The ev value should be in a fraction and represents the liquefaction susceptibility Number
-
-// Classify the data based on their LSN value
 // Caluclate the LSN Value using the following equations and the following parameters
  // KIYOMI: removed a bunch of stuff, you shouldnt pass LSN around that is a function.
  // instead, put this calculation inside.
+
+ //Useful code: var slrValue = document.getElementById("add-slr").addEventListener(slrValue, featureLSN).value;
   function colorLSN(props) {
-    // Determine the factors used to calculate slr value is /10 because the height data is in decimeters.
+    // Determine the factors used to calculate slr value is /10 because the height data is in decimeters
     let featureLSN = Math.log(props.depth + (slrValue/10)) * (props.liqueev/1000) * 1000
   //  console.log(featureLSN);
     return   featureLSN > 50 ? '#b30000' :  // Severe Damage
@@ -151,6 +144,23 @@ var soilGeojson = L.geoJson(soilsData, {
              featureLSN > 10 ? '#fdd49e' :  // No or little land damage
                         '#fef0d9';   // No damaged or associated LSN value, produce this color
    };
+
+   var slrValue;
+
+   L.DomEvent.on(document.getElementById('add-slr'), 'change input', function(ev) {
+     // KIYOMI: update your SLR value
+     slrValue = ev.target.value;
+     map.removeLayer(soilGeojson);
+     soilGeojson = L.geoJson(soilsData,
+       {style: soilStyle,
+       });
+       soilGeojson.addTo(map)
+   });
+
+   var slrValue = document.addEventListener('change input', function() {
+
+       });
+
    // add for legend
    function legendColours(props) {
      return   props > 50 ? '#b30000' :  // Severe Damage
@@ -161,7 +171,12 @@ var soilGeojson = L.geoJson(soilsData, {
                            '#fef0d9';   // No damaged or associated LSN value, produce this color
     };
 
-// Code for Legend
+//Update the Liquefaction Layer when there has been a change in slr
+// Track the last layer
+ // Lastlayer added
+
+
+// Code for Legend box
 var legend = L.control({position:'bottomright'});
 legend.onAdd = function (map) {
  var div = L.DomUtil.create('div', 'legend'),
@@ -197,16 +212,17 @@ var baseMaps = {
     "Liquefaction": liquefaction
 };
 
-//Slider code was also modiefied from Iván Sánchez Ortega's sliders demo code:
+//Slider code was also modified from Iván Sánchez Ortega's sliders demo code:
 // Repo is available from here: https://gitlab.com/IvanSanchez/Leaflet.TileLayer.GL/blob/master/demo/demo-sliders.html
-L.DomEvent.on(document.getElementById('addslr'), 'change input', function(ev) {
+L.DomEvent.on(document.getElementById('add-slr'), 'change input', function(ev) {
   // KIYOMI: update your SLR value
   slrValue = ev.target.value;
   antitoner.setUniform('slrValue', ev.target.value);
   antitoner.reRender();
 });
-//This code here tracks how much the sea level has increased
-var control = document.getElementById('addslr');
+
+//This code here tracks how much the sea level has increased by
+var control = document.getElementById('add-slr');
       var output = document.getElementById('output');
       control.addEventListener('input', function() {
         output.innerText = control.value;
