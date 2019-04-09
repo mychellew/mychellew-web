@@ -163,17 +163,17 @@ legend.addTo(map);
 
 //Toggle Layers
 // Layer 1: Looking at Sea Level Rise Scenarios
-  var onlySLR = L.layerGroup([antitoner]);
-  onlySLR.addTo(map);
+//  var onlySLR = L.layerGroup([antitoner]);
+//  onlySLR.addTo(map);
 // //Layer 2: Looking at Liquefaction Severity Number and Sea Level Rise
-  var liquefaction = L.layerGroup([soilGeojson, legend]);
-  liquefaction.addTo(map);
+//  var liquefaction = L.layerGroup([soilGeojson, legend]);
+//  liquefaction.addTo(map);
 //
 // Add these layers into the Map
-  L.control.layers(onlySLR, liquefaction).addTo(map);
+//  L.control.layers(onlySLR, liquefaction).addTo(map);
 //
 // //Sylization of the Toggle Menu
-  var toggleLayers = {
+//  var toggleLayers = {
   	"<span style=' color: gray'>Sea Level Rise Scenarios</span>": onlySLR,
   	"Liquefaction Severity Number": liquefaction
   };
