@@ -1475,7 +1475,7 @@ var soilsData =
         SHAPE_Length: 0.1627222016399484,
         SHAPE_Area: 0.001040171947992107,
         depth: 15,
-        liqueev: 20
+        liqueev: 5
       },
       id: 14
     },
@@ -5084,7 +5084,7 @@ var soilsData =
         SHAPE_Length: 0.03771453642959511,
         SHAPE_Area: 0.00003491631597230281,
         depth: 15,
-        liqueev: 20
+        liqueev: 5
       },
       id: 49
     },
