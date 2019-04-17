@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html> 
+  
+  <head>
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"> </script>
+    <script src="https://unpkg.com/aframe-animation-component@^5.1.2/dist/aframe-animation-component.min.js"></script>
+    <script src="public/js/sphereexpand.js"></script>
+    <script src="public/js/backhome.js"></script>
+    <script src="public/js/disappear.js"></script>
+  </head>
+  
+  <body> 
+    <a-scene physics renderer = "gammaOutput: true">
+      
+      <a-sky id = "sky" color = "#101010"></a-sky>
+    
+      <a-assets>
+      <img id="timessquare" src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Ftimesquare.jpg?1555347035827">
+      </a-assets>
+      
+<!-- Scene -->
+<!-- Starting Point of the Maze: Room -->
+      <a-entity i d= "start" position="-200, 0, 440.665" class = "homeworld">
+      <a-gltf-model 
+                 id = "room"
+                 position = "254.49, 136.13, -105.6" 
+                 rotation = "0,0,0" 
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fbed.glb?1555231675727"
+                 scale = "5 5 5">
+      </a-gltf-model>
+      
+      <a-gltf-model
+                id = "computer"
+                position = "266.799, 141.00, -102.52"
+                rotation = "0, 270, 0"
+                src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fcomputer.glb?1555231762299"
+                scale = "0.005 0.005 0.005">
+      </a-gltf-model>
+     
+      <a-plane id="startcaption" 
+               position="257.333 140.245 -112.080" 
+               rotation="0 0 0" 
+               height="auto" 
+               width="auto" 
+               color="#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: '... the room is shelter of sorts... I have no real interest in the outside world...'; width: 12; align: center;"
+               class = "homeworld">
+      </a-plane>
+         <a-plane id="startcaption2" 
+               position="315.722 145.00 -107.080" 
+               rotation="0 270 0" 
+               height="auto" 
+               width="auto" 
+               color="#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'the nail that stands up gets hammered down...'; width: 24; align: center;"
+               class = "homeworld">
+      </a-plane>
+        <a-plane id="startcaption3" 
+               position="346.475 161.012 -112.99" 
+               rotation="0 270 0" 
+               height="auto" 
+               width="auto" 
+               color="#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'those who are disfigured and unusable are thrown away...'; width: 24; align: center;"
+               class = "homeworld">
+      </a-plane>
+        <a-plane id="startcaption4" 
+               position="339.95 156.785 -94.104" 
+               rotation="0 270 0" 
+               height="auto" 
+               width="auto" 
+               color="#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'those that can take the pounding are invisible...'; width: 24; align: center;"
+               class = "homeworld">
+      </a-plane>
+        <a-plane id="startcaption5" 
+               position="339.722 148.037 -78.204" 
+               rotation="0 270 0" 
+               height="auto" 
+               width="auto" 
+               color="#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'those that cannot take the pounding are placed under high pressures and break...'; width: 24; align: center;"
+               class = "homeworld">
+      </a-plane>
+      </a-entity>
+      
+<!-- Maze-->      
+      <a-gltf-model 
+                 id = "maze"
+                 position = "-380, -140, 550" 
+                 rotation = "0,1,0" 
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fmaze.glb?1555231610751"
+                 scale = "0.2, 0.2, 0.2"
+                 texture = "#303030"
+                 static-body
+                 class = "homeworld">
+      </a-gltf-model>
+
+<!-- Background --> 
+      <a-gltf-model
+                 id = "shadow1"
+                 position = "1000, -140, 1000"
+                 rotation = "0, 0, 0"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fshadow.glb?1555283889504"
+                 scale = "20, 20, 20"
+                 static-body>
+      </a-gltf-model>
+         
+      <a-gltf-model
+                 id = "shadow2"
+                 position = "1000, -140, 1000"
+                 rotation = "0, 90, 0"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fshadow.glb?1555283889504"
+                 scale = "20, 20, 20"
+                 static-body>
+      </a-gltf-model>
+      
+      <a-gltf-model
+                 id = "shadow3"
+                 position = "1000, -140, 1000"
+                 rotation = "0, 180, 0"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fshadow.glb?1555283889504"
+                 scale = "20, 20, 20"
+                 static-body>
+      </a-gltf-model>
+      
+        <a-gltf-model
+                 id = "shadow4"
+                 position = "1000, -140, 1000"
+                 rotation = "0, 270, 0"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fshadow.glb?1555283889504"
+                 scale = "20, 20, 20"
+                 static-body>
+      </a-gltf-model>
+      
+            <a-gltf-model
+                 id = "trash"
+                 position = "60, 141, 490"
+                 rotation = "0, 180, 0"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Ftrash.glb?1555344817307"
+                 scale = "10, 10, 10">
+      </a-gltf-model>
+      
+      <a-gltf-model
+                id = "heartless"
+                position = "1000, 1000, 500"
+                src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fshadows.glb?1555307694433"
+                scale = "100, 100, 100"
+                class = "homeworld">
+      </a-gltf-model>
+
+<!-- Obstacles -->
+<!-- Dead End 1 -->
+      <a-plane id="wallcaption1" 
+               position = "157.652, 150.400, 450.659" 
+               rotation = "0 270 0" 
+               height = "auto" 
+               width= "auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'It feels good staying at home, I can do whatever I want.. I wouldn't know what to do with myself otherwise'; width: 64; align: center;"
+               class = "homeworld">
+      </a-plane>   
+      
+      <a-entity id = "bullying" class = "homeworld">
+       <a-gltf-model
+                 id = "toilet"
+                 position = "108.635, 132.693, 509.82"
+                 rotation = "0, 180, 0"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Ftoilet.glb?1555231715287"
+                 scale = "30, 30, 30">
+       </a-gltf-model>
+        
+      <a-gltf-model
+                 id = "sadchild"
+                 position = "113.342, 129.360, 522.491"
+                 rotation = " 0, 180, 15"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fscared_boy.glb?1555385108783"
+                 scale = "0.05, 0.05, 0.05">
+      </a-gltf-model>
+      
+        <a-plane id="bullyingcaption" 
+               position = "131.147, 144.26, 510.623" 
+               rotation = "0 180 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+          text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'Avoiding bullies meant hiding in the washroom, after being bullied I decided to stay home...'; width: 24; align: center;">
+      </a-plane>     
+     </a-entity>
+      
+      <!--Dead End 2-->
+       <a-entity id="photospheredisplay" class="homeworld" position="3.741 140.53 346.64" scale = "5, 5, 5">
+          <a-box color="black" rotation="0 35 0" width="1" height="2" depth=".5" ></a-box>
+          
+         <a-sphere position="0 1.8 0" radius=".7" src = "#timessquare" sphereexpand         
+          animation="property: rotation; to: 0 360 0; easing: easeInOutSine; dur: 30000; loop: true; elasticity: 0"
+          ></a-sphere>
+         </a-entity>
+      
+      <a-circle id="homebutton" position = "10.765 140.296 356.44" rotation="-90 0 0" backhome color = "#101010"></a-circle>
+      
+      <a-gltf-model id= "anger" 
+                    position = "-12.652, 143.725, 326.082" 
+                    rotation = "0, 120, 0"
+                    src ="https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fanger.glb?1555293925616">
+      </a-gltf-model>
+
+      <!-- Dead End 3 -->
+      <a-plane id="wallcaption2" 
+               position = "69.987, 145.635, 374.310" 
+               rotation = "0 0 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'I'm scared...'; width: 36; align: center;"
+               class = "homeworld">
+      </a-plane> 
+      
+      <a-plane id="wallcaption2.1" 
+               position = "-162.21, 150.71, 311.45" 
+               rotation = "0 0 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'My parents want me to succeed, that's all they wish for me'; width: 36; align: center;"
+               class = "homeworld">
+      </a-plane> 
+      
+       
+<!-- Dead End 3 -->
+       <a-plane id="wallcaption3" 
+               position = "68, 147.115, 485.956" 
+               rotation = "0 180 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'I think a major problem with people like me is that we're ultimately afraid of failure. Things have changed in the world'; width: 36; align: center;"
+               class = "homeworld">
+      </a-plane>  
+      
+      <a-entity id="career_pressure" class = "homeworld">
+        <a-gltf-model
+                id = "money"
+                position = "82, 141.952, 512.44"
+                src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fmoney.glb?1555283981359"
+                scale = "1, 1, 1">
+        </a-gltf-model>
+        
+        <a-gltf-model
+                id = "podium"
+                position = "82, 125.00, 509.44"
+                rotation = " 0. 90, 0"
+                src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fpodium.glb?1555284229680"
+                scale = "10, 10, 10">
+        </a-gltf-model>
+        
+        <a-gltf-model
+                id = "businessman"
+                position = "79.841, 137.471, 528.163"
+                rotation = "0 270 0"
+                src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fbusinessman.glb?1555294255175"
+                scale = "0.1, 0.1, 0.1">
+        </a-gltf-model>
+        
+         <a-gltf-model
+                id = "happyface"
+                position = "44.925, 136.00, 537.87"
+                rotation = "0, 270, 0"
+                src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fhappy_mask.glb?1555293768602"
+                scale = "0.1, 0.1, 0.1">
+        </a-gltf-model>
+        
+         <a-gltf-model
+                id = "sadface"
+                position = "77.662, 147.175, 528.06"
+                rotation = "0, 270, 0"
+                src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fsad_mask.glb?1555284074786"
+                scale = "0.1, 0.1, 0.1">
+        </a-gltf-model>
+        
+          <a-plane id="careercaption" 
+               position = "33, 144,26, 510.623" 
+               rotation = "0 270 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+          text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'My parents divorced when I was 10. I went to live with my mother. She cares what other people think and wanted me to have a job that wouldn't embarass her'; width: 24; align: center;">
+          </a-plane>   
+      </a-entity>
+      
+      <a-plane id="wallcaption2.3" 
+               position = "17.518, 145.635, 312.252" 
+               rotation = "0 0 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'I do get angry with myself when I see how easy others find life. I go out to work but only because I have to, to survive... If I was forced to move out, the only way I could leave is in a body bag'; width: 36; align: center;"
+               class = "homeworld">
+      </a-plane> 
+      
+<!-- Dead End 4 -->
+       <a-plane id="wallcaption4" 
+               position = "-60, 144,26, 530.623" 
+               rotation = "0 180 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'I wanted to be an opera singer, but my family wanted me to take over the family business but it was too stressful. My little brother can do whatever he wants...'; width: 24; align: center;"
+              class = "homeworld">
+      </a-plane>  
+      
+      <a-entity id = "race" class = "homeworld">
+       <a-gltf-model
+                 id = "runner"
+                 position = "-56.731, 133.975, 537.260"
+                 rotation = "0, 180, 0"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Frunner.glb?1555293571963"
+                 scale = "1, 1, 1"
+                 animation = "property: position; delay: 1000; dur: 6000; loop: true; dir: normal; to: -56.731 133.975 344.344">
+       </a-gltf-model>
+       <a-gltf-model
+                 id = "runner2"
+                 position = "-40.731, 133.975, 537.260"
+                 rotation = "0, 180, 0"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Frunner.glb?1555293571963"
+                 scale = "1, 1, 1"
+                 animation = "property: position; delay: 1000; dur: 8000; loop: true; dir: normal; to: -60.731 133.975 344.344">
+       </a-gltf-model>
+        
+      <a-gltf-model
+                 id = "runner3"
+                 position = "-65.731, 133.975, 537.260"
+                 rotation = "0, 180, 0"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Frunner.glb?1555293571963"
+                 scale = "1, 1, 1"
+                 animation = "property: position; delay: 1000; dur: 4000; loop: true; dir: normal; to: -65.731 133.975 344.344">
+       </a-gltf-model>
+      
+       <a-gltf-model
+                 id = "finishLine"
+                 position = "-49.619, 116.97, 305"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Frace.glb?1555385270472"
+                 scale = "2, 2, 2">
+       </a-gltf-model>
+    
+       
+       <a-gltf-model
+                 id = "trophy"
+                 position = "-58.762, 175.683, 325.432"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Ftrophy.glb?1555293612103"
+                 scale = "5, 5, 5">
+       </a-gltf-model>
+      
+       <a-plane id="tropycaption" 
+               position = "-60, 175.424, 324.053" 
+               rotation = "0 0 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+          text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value:'the Easy life'; width: 56; align: center;">
+      </a-plane>     
+      </a-entity>
+  
+      
+<!-- Dead End 5 -->
+      
+      <a-plane id="wallcaption2.5" 
+               position = "-128.590, 149.260, 398.384" 
+               rotation = "0 90 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'I was very well mentally, but my parents pushed me the way I didn't want to go. My father is an artist and he runs his own buisness - he wanted me to do the same. I wanted to become a computer programmer in a large firm'; width: 36; align: center;"
+               class = "homeworld">
+      </a-plane> 
+      
+      <a-plane id="wallcaption2.6" 
+               position = "-367.7, 149.260, 420.130" 
+               rotation = "0 90 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'I feared my friends and family would have countless reasons to be angry or embarassed by me'; width: 64; align: center;"
+               class = "homeworld">
+      </a-plane> 
+      
+       <a-entity id = "feeling abandoned" class = "homeworld">
+         <a-gltf-model
+                 id = "fire"
+                 position = "-374 97.536 527.11"
+                 src ="https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Ffire.glb?1555347775976"
+                 scale= "10 10 10">
+         </a-gltf-model>
+         
+         <a-gltf-model
+                 id = "family"
+                 position = "-341, 126.00, 517.253"
+                 rotation = "0 90 0"
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Ffamily.glb?1555294264633"
+                 scale = "30, 30, 30">
+       </a-gltf-model>
+         
+       
+      <a-plane id="abandonmentcaption" 
+               position = "-350, 155.424, 505.053" 
+               rotation = "0 90 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value:'I never felt loved, nothing of the kind... Especially when I was little'; width: 36; align: center;">
+      </a-plane>      
+      </a-entity>
+      
+<!-- Dead End 6 --> 
+      <a-entity id="watched">
+        <a-gltf-model 
+                id="eye1"
+                position="-185.19, 161.85, 403.79"
+                rotation= "45, 160, -45"
+                src="https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Feye.glb?1555475167910"
+                scale ="1, 1, 1">
+        </a-gltf-model>
+        <a-gltf-model 
+                id="eye2"
+                position="-143.50, 159.955, 414.145"
+                rotation= "50, -145, -50"
+                src="https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Feye.glb?1555475167910"
+                scale ="1, 1, 1">
+        </a-gltf-model>
+        <a-gltf-model 
+                id="eye3"
+                position="-185.68, 151.222, 378.79"
+                rotation= "30, 90, 0"
+                src="https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Feye.glb?1555475167910"
+                scale = "1, 1, 1">
+        </a-gltf-model>
+        <a-gltf-model 
+                id="eye4"
+                position="-139.47, 135.83, 392.34"
+                rotation= "-25, 270, 50"
+                src="https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Feye.glb?1555475167910"
+                scale = "1, 1, 1">
+        </a-gltf-model>
+        <a-gltf-model 
+                id="eye5"
+                position="-187.19, 143.10, 406.70"
+                rotation= "10, 120, 45"
+                src="https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Feye.glb?1555475167910"
+                scale ="1.5, 1.5, 1.5">
+        </a-gltf-model>
+        <a-gltf-model 
+                id="eye6"
+                position="-141, 155.133, 374.805"
+                rotation= "0, 0, 0"
+                src="https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Feye.glb?1555475167910"
+                scale ="1.5, 1.5, 1.5">
+        </a-gltf-model>
+        
+        <a-plane id="wallcaption2.8" 
+               position = "-162.68, 148.26, 422.250" 
+               rotation = "0 180 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'It's common among us to have gone to elite high schools. I wasn't good and studying, I didn't want others to see my failures'; width: 36; align: center;"
+               class = "homeworld">
+      </a-plane> 
+
+       <a-gltf-model 
+                 id = "roommini"
+                 position = "-165.40, 132.82, 397.41"
+                 rotation = "0,90,0" 
+                 src = "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fbed.glb?1555231675727"
+                 scale = "0.1 0.1 0.1">
+      </a-gltf-model>
+    </a-entity>
+      
+<!-- Dead End 7 -->      
+        
+      <a-plane id="wallcaption2.9" 
+               position = "-312.54, 147.115, 485.950" 
+               rotation = "0 180 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: 'I was furious when my younger brother was doing what he wanted. I became violent with my family'; width: 64; align: center;"
+               class = "homeworld">
+      </a-plane> 
+      
+      <a-plane id="wallcaption3.1" 
+               position = "-285.49, 150.71, 322.72" 
+               rotation = "0 0 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value: '...biterness, paranoia, ignorance, hatred creep in. So you stick yourself in a hole wehre no one can get to you and stay there'; width: 36; align: center;"
+               class = "homeworld">
+      </a-plane>  
+      
+      <a-plane id="wallcaption3.3" 
+               position = "-105.58, 150.718, 480.87" 
+               rotation = "0 180 0" 
+               height = "auto" 
+               width="auto" 
+               color = "#191817"
+               text = "font: https://cdn.aframe.io/fonts/DejaVu-sdf.fnt; 
+                  value:'I just wanted to supress everything [pressures of society], put a lid on everything. I didn't want to think... I didn't want to feel'; width: 36; align: center;"
+               class = "homeworld">
+      </a-plane> 
+<!-- Hallways -->   
+      <a-entity id="hammerandnail">
+      <a-gltf-model id ="nail1"
+                    position="84.013 130 383.533"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+         <a-gltf-model id ="nail2"
+                    position="-0.843 130 418.326"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail3"
+                    position="-0.843 130 381.48"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail4"
+                    position="-119.87 130 322.814"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail5"
+                    position="-183.28 130 322.814"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail6"
+                    position="-236.49 130 322.814"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail7"
+                    position="-216.24 130 405.190"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail8"
+                    position="-299.24 130 405.190"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail9"
+                    position="-299.24 130 443.720"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail10"
+                    position="-90 130 457.307"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail11"
+                    position="232.95 130 509.440"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail12"
+                    position="-322.64 130 509.440"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+           <a-gltf-model id ="nail13"
+                    position="-332.64 130 509.440"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+      <a-gltf-model id ="nail14"
+                    position="-330.96 130 394.795"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+    
+           <a-gltf-model id ="nail15"
+                    position="443.362 130 321.795"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+    
+           <a-gltf-model id ="nail16"
+                    position="150 130 375.714"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+    
+           <a-gltf-model id ="nail17"
+                    position="142.83 130 462.38"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+  
+           <a-gltf-model id ="nail18"
+                    position="-12.216 130 474.259"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+
+           <a-gltf-model id ="nail19"
+                    position="-186.29 130 521.207"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+
+           <a-gltf-model id ="nail20"
+                    position="-200.29 130 436.847"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fgray_nail.glb?1555518570668">
+        
+      </a-gltf-model>
+
+           <a-gltf-model id ="diff"
+                    position="95.485 155.540 320.45"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fblacknail.glb?1555518559744"
+                    scale = "150 150 150">
+        
+      </a-gltf-model>
+            <a-gltf-model id ="hammer1"
+                    position="-3.388 145.540 465.845"
+                    rotation="145 0 270"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fhammer.glb?1555518579137"
+                    scale = "10 10 10">
+        
+      </a-gltf-model>
+            <a-gltf-model id ="hammer2"
+                    position="109.670 160 346.32"
+                    rotation="25 25 90"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fhammer.glb?1555518579137"
+                    scale = "25 25 25">
+        
+      </a-gltf-model>
+            <a-gltf-model id ="hammer3"
+                    position="-320.67 136.26 386.00"
+                    rotation="30 145 90"
+                    src= "https://cdn.glitch.com/0e9137a0-1adf-41bb-87e4-ec6da57bc48e%2Fhammer.glb?1555518579137"
+                    scale = "15 15 15">
+        
+      </a-gltf-model>
+      </a-entity>
+                
+
+<!-- Exit Block -->   
+  <a-entity id="block1" class="homeworld" position="-322.40, 156.215, 335.053" disappear>
+      <a-box id = "box1" 
+             color="tomato" 
+             depth="30" 
+             width ="30"
+             height = "30"
+             position ="0, -8.009, 0">
+      </a-box>
+      <a-plane id="text1" 
+                 position = "-322.40, 156.215, 308.053"
+                 height ="auto"
+                 width ="auto"
+                 color = "#191817"
+                 text="I'm a failure">
+      </a-plane>
+  </a-entity>
+      
+  <a-entity id="block2" class="homeworld" position="-322.40, 156.215, 335.053" disappear>
+      <a-box id = "box2" 
+             color= "#191970" 
+             depth="30" 
+             width ="30"
+             height = "30"
+             position ="-9, -8, 0">
+      </a-box>
+    <a-plane id="text2" 
+                 position = "-322.40, 156.215, 335.053"
+                 text="I'm a failure">
+    </a-plane>
+  </a-entity>        
+  
+  <a-entity id="block3" class="homeworld" position="-322.40, 156.215, 335.053" disappear>
+    <a-box id = "box3" 
+             color= "#8FBC8F" 
+             depth = "30" 
+             width = "30"
+             height = "30"
+             position = "-31.708, -8.433, -2.402">
+    </a-box>
+    <a-plane id="text3" 
+                 position = "-322.40, 156.215, 335.053"
+                 text="I'm a failure">
+    </a-plane>
+  </a-entity>       
+
+      
+<!-- Camera and Controls -->
+      <a-entity id="rig" >
+        <a-entity id="camera"
+                  movement-controls kinematic-body rotation="0 -90 0"
+                  position="59.730, 142.700, 345.703" 
+                  camera look-controls
+                  wasd-controls= "acceleration: 1">
+        </a-entity>
+         <a-entity id="left-hand" teleport-controls="cameraRig: #cameraRig; teleportOrigin: #head;"></a-entity>
+      <a-entity id="right-hand" teleport-controls="cameraRig: #cameraRig; teleportOrigin: #head;"></a-entity>
+      </a-entity>
+      
+      <a-entity laser-controls="hand:right"></a-entity>
+      
+    </a-scene>
+  </body>
+  
+</html>
