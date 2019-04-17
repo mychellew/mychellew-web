@@ -24,7 +24,11 @@ For some it is a struggle to leave their homes due to a variety of personal reas
 one can become lost in their thoughts and can wander. The maze is colored white and which is quite jarring, when compared to the user's starting point - a bedroom
 which gives a more welcoming feel. The color choice was as attempt to make the user uncomfortable with the maze which represents thoughts that hikikomoris have and their incomfort when
 walking outside their comfort zones - their homes. Some of the thoughts and worries that these people have have been visualized in some way. One interesting feature about this VR would be the scene 
-shown in the figure below. In many asian countries, youth face stress regarding their career choices, as the economy is less stable, the competition for these stable jobs
+shown in the figure below. 
+
+<img src="lab3/app/lab/race.PNG">
+
+In many asian countries, youth face stress regarding their career choices, as the economy is less stable, the competition for these stable jobs
 have increased and have placed tremendous pressure on education in these countries. One thing that I enjoyed about creating these scene in the maze is that the user can only move a one speed,
 and can not move any faster than that. It feels as if this competition is a race to secure these positions and reflects feelings of some of these youth who are discouraged as their peers
 continue to progress in their lives and they are stuck at home. 
