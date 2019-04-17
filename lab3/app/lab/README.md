@@ -26,7 +26,7 @@ which gives a more welcoming feel. The color choice was as attempt to make the u
 walking outside their comfort zones - their homes. Some of the thoughts and worries that these people have have been visualized in some way. One interesting feature about this VR would be the scene 
 shown in the figure below. 
 
-<img src="lab3/app/lab/race.PNG">
+<img src="race.PNG">
 
 In many asian countries, youth face stress regarding their career choices, as the economy is less stable, the competition for these stable jobs
 have increased and have placed tremendous pressure on education in these countries. One thing that I enjoyed about creating these scene in the maze is that the user can only move a one speed,
@@ -49,7 +49,7 @@ https://www.youtube.com/watch?v=HWY5hzcG_FY&t=8s
 https://www.youtube.com/watch?v=ffvQZ2bGrRw&t=445s
 https://www.abc.net.au/news/2015-07-07/hikikomori-japanese-men-locking-themselves-in-their-bedrooms/6601656
 
-Click `Show` in the header to see your app live. 
+https://hikikomori.glitch.me/
 
 
 
